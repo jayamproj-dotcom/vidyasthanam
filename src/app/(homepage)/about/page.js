@@ -13,15 +13,23 @@ export async function generateMetadata() {
     const res = await getAboutData();
 
     if (res.success && res.data) {
+      const { metaTitle, metaDescription, metaKeywords } = res.data;
       return {
-        title: res.data.metaTitle || "About Us | Vidyasthanam",
-        description: res.data.metaDescription || "School of Indian Music, Culture and Languages",
-        keywords: res.data.metaKeywords || "Vidyasthanam, Music School",
+        title: metaTitle || "About Us | Vidyasthanam",
+        description: metaDescription || "School of Indian Music, Culture and Languages",
+        keywords: metaKeywords || "Vidyasthanam, Music School",
         openGraph: {
-          title: res.data.metaTitle,
-          description: res.data.metaDescription,
-          url: `${process.env.NEXT_PUBLIC_BASE_URL}/about`,
-        }
+          title: metaTitle,
+          description: metaDescription,
+          url: "/about",
+          images: ["/logocanva1.png"],
+        },
+        twitter: {
+          card: "summary_large_image",
+          title: metaTitle,
+          description: metaDescription,
+          images: ["/logocanva1.png"],
+        },
       };
     }
   } catch (err) {
@@ -29,6 +37,7 @@ export async function generateMetadata() {
   }
   return { title: "About Us | Vidyasthanam" };
 }
+
 
 export default async function AboutPage() {
   let aboutData = {

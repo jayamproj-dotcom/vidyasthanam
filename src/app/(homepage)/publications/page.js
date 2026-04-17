@@ -12,15 +12,23 @@ export async function generateMetadata() {
   try {
     const res = await getPublicationsData();
     if (res.success && res.data) {
+      const { metaTitle, metaDescription, metaKeywords } = res.data;
       return {
-        title: res.data.metaTitle || "Publications & Resources | Vidyasthanam",
-        description: res.data.metaDescription || "Explore our collection of Indian music and cultural publications.",
-        keywords: res.data.metaKeywords || "Vidyasthanam publications, music resources, PDFs",
+        title: metaTitle || "Publications & Resources | Vidyasthanam",
+        description: metaDescription || "Explore our collection of Indian music and cultural publications.",
+        keywords: metaKeywords || "Vidyasthanam publications, music resources, PDFs",
         openGraph: {
-          title: res.data.metaTitle,
-          description: res.data.metaDescription,
-          url: `${process.env.NEXT_PUBLIC_BASE_URL}/publications`,
-        }
+          title: metaTitle,
+          description: metaDescription,
+          url: "/publications",
+          images: ["/logocanva1.png"],
+        },
+        twitter: {
+          card: "summary_large_image",
+          title: metaTitle,
+          description: metaDescription,
+          images: ["/logocanva1.png"],
+        },
       };
     }
   } catch (err) {
@@ -28,6 +36,7 @@ export async function generateMetadata() {
   }
   return { title: "Publications & Resources | Vidyasthanam" };
 }
+
 
 export default async function PublicationsPage() {
   let publicationsData = {

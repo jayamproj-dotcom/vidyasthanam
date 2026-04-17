@@ -12,16 +12,23 @@ export async function generateMetadata() {
   try {
     const res = await getEventsData();
     if (res.success && res.data) {
-      // Logic for metadata if available in res.data, otherwise defaults
+      const { metaTitle, metaDescription, metaKeywords } = res.data;
       return {
-        title: res.data.metaTitle || "Events & Performances | Vidyasthanam",
-        description: res.data.metaDescription || "View latest performances and school events.",
-        keywords: res.data.metaKeywords || "Vidyasthanam, Events, Carnatic Music",
+        title: metaTitle || "Events & Performances | Vidyasthanam",
+        description: metaDescription || "View latest performances and school events.",
+        keywords: metaKeywords || "Vidyasthanam, Events, Carnatic Music",
         openGraph: {
-            title: res.data.metaTitle,
-            description: res.data.metaDescription,
-            url: `${process.env.NEXT_PUBLIC_BASE_URL}/events`,
-        }
+          title: metaTitle,
+          description: metaDescription,
+          url: "/events",
+          images: ["/logocanva1.png"],
+        },
+        twitter: {
+          card: "summary_large_image",
+          title: metaTitle,
+          description: metaDescription,
+          images: ["/logocanva1.png"],
+        },
       };
     }
   } catch (err) {
@@ -29,6 +36,7 @@ export async function generateMetadata() {
   }
   return { title: "Events & Performances | Vidyasthanam" };
 }
+
 
 export default async function EventsPage() {
   let eventsData = {

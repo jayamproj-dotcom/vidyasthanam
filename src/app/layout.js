@@ -39,10 +39,42 @@ const playfairDisplay = Playfair_Display({
   display: "swap",
 });
 
+const baseUrl = process.env.DOMIN_URL || "http://localhost:3000";
+const basePath = process.env.NEXT_PUBLIC_BASE_PATH || "";
+
 export const metadata = {
-  title: "Vidyasthanam - School of Indian Music, Culture & Languages",
-  description: "School of Indian Music, Culture and Languages",
+  metadataBase: new URL(`${baseUrl}${basePath}`),
+  title: {
+    default: "Vidyasthanam - School of Indian Music, Culture & Languages",
+    template: "%s | Vidyasthanam"
+  },
+  description: "Learn Carnatic, Hindustani, Veena, Vocal, and Languages at Vidyasthanam, Chennai.",
+  keywords: ["Indian Music", "Culture", "Languages", "Carnatic Music", "Hindustani Music", "Vocal Training", "Veena", "Sanskrit", "Tamil", "Chennai"],
+  authors: [{ name: "Vidyasthanam" }],
+  openGraph: {
+    type: "website",
+    locale: "en_IN",
+    url: "/",
+    siteName: "Vidyasthanam",
+    title: "Vidyasthanam - School of Indian Music, Culture & Languages",
+    description: "Learn Carnatic, Hindustani, Veena, Vocal, and Languages at Vidyasthanam, Chennai.",
+    images: [
+      {
+        url: "/logocanva1.png",
+        width: 800,
+        height: 600,
+        alt: "Vidyasthanam Logo",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Vidyasthanam - School of Indian Music, Culture & Languages",
+    description: "Learn Carnatic, Hindustani, Veena, Vocal, and Languages at Vidyasthanam, Chennai.",
+    images: ["/logocanva1.png"],
+  },
 };
+
 
 export default function RootLayout({ children }) {
   return (

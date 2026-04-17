@@ -13,15 +13,23 @@ export async function generateMetadata() {
   try {
     const res = await getGalleryData();
     if (res.success && res.data) {
+      const { metaTitle, metaDescription, metaKeywords } = res.data;
       return {
-        title: res.data.metaTitle || "Photo Gallery | Vidyasthanam",
-        description: res.data.metaDescription || "View photos from our recent performances and events.",
-        keywords: res.data.metaKeywords || "Vidyasthanam gallery, music photos, recitals",
+        title: metaTitle || "Photo Gallery | Vidyasthanam",
+        description: metaDescription || "View photos from our recent performances and events.",
+        keywords: metaKeywords || "Vidyasthanam gallery, music photos, recitals",
         openGraph: {
-          title: res.data.metaTitle,
-          description: res.data.metaDescription,
-          url: `${process.env.NEXT_PUBLIC_BASE_URL}/gallery`,
-        }
+          title: metaTitle,
+          description: metaDescription,
+          url: "/gallery",
+          images: ["/logocanva1.png"],
+        },
+        twitter: {
+          card: "summary_large_image",
+          title: metaTitle,
+          description: metaDescription,
+          images: ["/logocanva1.png"],
+        },
       };
     }
   } catch (err) {
@@ -29,6 +37,7 @@ export async function generateMetadata() {
   }
   return { title: "Photo Gallery | Vidyasthanam" };
 }
+
 
 export default async function GalleryPage() {
   let galleryData = {

@@ -13,15 +13,31 @@ export async function generateMetadata() {
     const res = await getHomeData();
 
     if (res.success && res.data) {
+      const { title, description, keywords } = res.data;
       return {
-        title: res.data.title || "Vidyasthanam - School of Indian Music, Culture & Languages",
-        description: res.data.description || "Learn Carnatic, Hindustani, Veena, Vocal, and Languages.",
-        keywords: res.data.keywords || "Music, Veena, Sanskrit, Tamil, Hindi, French, Chennai",
+        title: title || "Vidyasthanam - School of Indian Music, Culture & Languages",
+        description: description || "Learn Carnatic, Hindustani, Veena, Vocal, and Languages.",
+        keywords: keywords || "Music, Veena, Sanskrit, Tamil, Hindi, French, Chennai",
         openGraph: {
-          title: res.data.title,
-          description: res.data.description,
-          url: `${process.env.NEXT_PUBLIC_BASE_URL || ""}/`,
-        }
+          title: title,
+          description: description,
+          url: "/",
+          siteName: "Vidyasthanam",
+          images: [
+            {
+              url: "/logocanva1.png",
+              width: 1200,
+              height: 630,
+              alt: "Vidyasthanam Music Academy",
+            },
+          ],
+        },
+        twitter: {
+          card: "summary_large_image",
+          title: title,
+          description: description,
+          images: ["/logocanva1.png"],
+        },
       };
     }
   } catch (err) {
@@ -29,6 +45,7 @@ export async function generateMetadata() {
   }
   return { title: "Vidyasthanam - School of Indian Music, Culture & Languages" };
 }
+
 
 export default async function HomePage() {
   let homeData = {
