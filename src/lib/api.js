@@ -118,12 +118,14 @@ const api = {
       cache: "no-store",
     }),
 
-  delete: (endpoint, options = {}) =>
+  delete: (endpoint, body, options = {}) =>
     apiFetch(endpoint, {
       ...options,
       method: "DELETE",
+      body: JSON.stringify(body),
       cache: "no-store",
     }),
+
 };
 
 export default api;

@@ -12,8 +12,9 @@ export default async function Layout({ children }) {
         // Fetch Navbar data
         const navRes = await getNavbarData();
         if (navRes.success && navRes.data) {
-            navData = navRes.data.links || [];
+            navData = navRes.data;
         }
+
 
         // Fetch Courses data for Footer
         const coursesRes = await getCoursesData();

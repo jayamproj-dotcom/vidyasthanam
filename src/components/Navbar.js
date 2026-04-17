@@ -21,24 +21,6 @@ const Navbar = ({ initialData = [] }) => {
   useEffect(() => {
     setMounted(true);
 
-    // Fallback fetch if no data was provided by server
-    // if (navItems.length === 0) {
-    //   const fetchNav = async () => {
-    //     try {
-    //       const res = await api.get("/navbar");
-    //       if (res.success) {
-    //         const active = res.data
-    //           .filter((item) => item.isActive)
-    //           .sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
-    //         setNavItems(active);
-    //       }
-    //     } catch (err) {
-    //       console.error("Failed to load nav", err);
-    //     }
-    //   };
-    //   fetchNav();
-    // }
-
     const handleScroll = () => setScrolled(window.scrollY > 50);
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
@@ -56,16 +38,14 @@ const Navbar = ({ initialData = [] }) => {
   };
 
   // Split nav items: home, contact, and everything in between
-  const homeItem = navItems.find((i) => i.path === "/" || i.path === "/home");
   const contactItem = navItems.find((i) => i.path === "/contact");
   const middleItems = navItems.filter(
     (i) =>
       i.path !== "/" &&
       i.path !== "/home" &&
-      i.path !== "/contact" &&
-      i.path !== "/student-registration" &&
-      i.path !== "/vidyasthanam-foundation",
+      i.path !== "/contact"
   );
+
 
   return (
     <>

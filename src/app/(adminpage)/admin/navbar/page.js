@@ -242,7 +242,6 @@ export default function NavbarPage() {
   };
 
   const deleteItem = async (id) => {
-    if (!confirm("Are you sure you want to delete this link?")) return;
     try {
       const res = await api.delete("/navbar", { id });
       if (res.success) {
