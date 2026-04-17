@@ -9,29 +9,25 @@ export async function GET() {
     await connectToDatabase();
     let home = await Home.findOne({});
     
-    // Auto-seed if empty
-    if (!home || !home.title) {
-        const defaultMetadata = {
-            title: "Vidyasthanam - School of Indian Music, Culture and Languages",
-            description: "Learn Carnatic, Hindustani, Veena, Vocal, and Languages in Chennai and Montréal.",
-            keywords: "Music, Veena, Sanskrit, Tamil, Hindi, French, Chennai, Montreal",
-            isActive: true
-        };
-        
-        home = await Home.findOneAndUpdate(
-            {},
-            { $set: defaultMetadata },
-            { upsert: true, new: true }
-        );
+    if (!home) {
+      return NextResponse.json({
+        success: true,
+        data: {
+          title: "",
+          description: "",
+          keywords: "",
+          isActive: true
+        }
+      });
     }
 
     return NextResponse.json({ 
         success: true, 
         data: {
-            title: home.title,
-            description: home.description,
-            keywords: home.keywords,
-            isActive: home.isActive
+            title: home.title || "",
+            description: home.description || "",
+            keywords: home.keywords || "",
+            isActive: home.isActive ?? true
         } 
     });
   } catch (error) {

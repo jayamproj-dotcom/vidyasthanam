@@ -6,12 +6,14 @@ import Banner from "@/components/Banner";
 import api from "@/lib/api";
 
 export default function AboutContent({ initialData }) {
-  const [data, setData] = useState(initialData || {
-    storySections: [],
-    timeline: [],
-    gallery: [],
-    timelineBg: ""
-  });
+  const [data, setData] = useState(
+    initialData || {
+      storySections: [],
+      timeline: [],
+      gallery: [],
+      timelineBg: "",
+    },
+  );
   const [loading, setLoading] = useState(!initialData);
 
   const [lightbox, setLightbox] = useState({
@@ -23,11 +25,11 @@ export default function AboutContent({ initialData }) {
 
   useEffect(() => {
     // Hide preloader when component mounts
-    const loader = document.getElementById('loader');
+    const loader = document.getElementById("loader");
     if (loader) {
-      loader.classList.add('fade-out');
+      loader.classList.add("fade-out");
       setTimeout(() => {
-        loader.style.display = 'none';
+        loader.style.display = "none";
       }, 500);
     }
 
@@ -119,45 +121,64 @@ export default function AboutContent({ initialData }) {
             </div>
           </div>
 
-          {data.storySections?.filter(s => s.isActive !== false).map((section, idx) => (
-            <div key={idx} className={`row align-items-center mb-5 ${idx % 2 !== 0 ? 'flex-md-row-reverse' : ''}`}>
-              <div className="col-md-6 mb-4 mb-md-0">
-                {section.images?.[0] && (
-                  <Image
-                    src={section.images[0]}
-                    alt={section.title || "About Section Image"}
-                    className="img-fluid rounded shadow"
-                    width={630}
-                    height={522}
-                    sizes="(max-width: 768px) 100vw, 388px"
-                    style={{ objectFit: "cover", width: "100%", height: "auto" }}
-                  />
-                )}
+          {data.storySections
+            ?.filter((s) => s.isActive !== false)
+            .map((section, idx) => (
+              <div
+                key={idx}
+                className={`row align-items-center mb-5 ${idx % 2 !== 0 ? "flex-md-row-reverse" : ""}`}
+              >
+                <div className="col-md-6 mb-4 mb-md-0">
+                  {section.images?.[0] && (
+                    <Image
+                      src={(process.env.NEXT_PUBLIC_BASE_PATH || "") + section.images[0]}
+                      alt={section.title || "About Section Image"}
+                      className="img-fluid rounded shadow"
+                      width={630}
+                      height={522}
+                      sizes="(max-width: 768px) 100vw, 388px"
+                      style={{
+                        objectFit: "cover",
+                        width: "100%",
+                        height: "auto",
+                      }}
+                    />
+                  )}
+                </div>
+                <div className="col-md-6">
+                  {section.title && (
+                    <h3 className="mb-3 text-orange">{section.title}</h3>
+                  )}
+                  {(section.content || section.desc)
+                    ?.split("\n\n")
+                    .map((para, i) => (
+                      <p key={i}>{para.trim()}</p>
+                    ))}
+                </div>
               </div>
-              <div className="col-md-6">
-                {section.title && <h3 className="mb-3 text-orange">{section.title}</h3>}
-                {(section.content || section.desc)?.split('\n\n').map((para, i) => (
-                  <p key={i}>{para.trim()}</p>
-                ))}
-              </div>
-            </div>
-          ))}
+            ))}
 
-          {(!data.storySections || data.storySections.length === 0) && !loading && (
-             <div className="text-center py-5">
+          {(!data.storySections || data.storySections.length === 0) &&
+            !loading && (
+              <div className="text-center py-5">
                 <p>No story content available yet.</p>
-             </div>
-          )}
+              </div>
+            )}
         </div>
       </section>
 
       {/* History Section */}
-      <section className="history-section py-5 bg-dark" style={{ 
-        backgroundImage: data.timelineBg ? `linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)), url(${data.timelineBg})` : 'none',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundAttachment: 'fixed'
-      }}>
+      <section
+        className="history-section py-5 bg-dark"
+        style={{
+          backgroundImage: data.timelineBg
+            ? `linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)), url(${(process.env.NEXT_PUBLIC_BASE_PATH || "") + data.timelineBg})`
+            : "none",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundAttachment: "fixed",
+        }}
+      >
         <div className="container">
           <div className="row">
             <div className="col-lg-12">
@@ -167,14 +188,19 @@ export default function AboutContent({ initialData }) {
             </div>
           </div>
           <div className="timeline">
-            {data.timeline?.filter(t => t.isActive !== false).map((item, idx) => (
-              <div key={idx} className={`timeline-item ${idx % 2 === 0 ? 'left' : 'right'}`}>
-                <div className="timeline-content">
-                  <h3 className="text-orange">{item.year}</h3>
-                  <p>{item.text}</p>
+            {data.timeline
+              ?.filter((t) => t.isActive !== false)
+              .map((item, idx) => (
+                <div
+                  key={idx}
+                  className={`timeline-item ${idx % 2 === 0 ? "left" : "right"}`}
+                >
+                  <div className="timeline-content">
+                    <h3 className="text-orange">{item.year}</h3>
+                    <p>{item.text}</p>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
           </div>
         </div>
       </section>
@@ -191,30 +217,32 @@ export default function AboutContent({ initialData }) {
           <div className="row">
             <div className="col-lg-12">
               <div className="gallery-grid">
-                {data.gallery?.filter(g => g.isActive !== false).map((item, index) => (
-                  <div
-                    key={index}
-                    className="gallery-item"
-                    data-category={item.category}
-                    onClick={() => openLightbox(index)}
-                    style={{ cursor: "pointer" }}
-                  >
-                    <Image
-                      src={item.src}
-                      alt={item.alt || ""}
-                      className="gallery-img"
-                      width={400}
-                      height={300}
-                      sizes="(max-width: 480px) 100vw, (max-width: 768px) 50vw, 33vw"
-                      style={{ objectFit: "cover" }}
-                    />
-                    <div className="gallery-overlay">
-                      <div className="gallery-caption">
-                         {item.alt || item.category}
+                {data.gallery
+                  ?.filter((g) => g.isActive !== false)
+                  .map((item, index) => (
+                    <div
+                      key={index}
+                      className="gallery-item"
+                      data-category={item.category}
+                      onClick={() => openLightbox(index)}
+                      style={{ cursor: "pointer" }}
+                    >
+                      <Image
+                        src={(process.env.NEXT_PUBLIC_BASE_PATH || "") + item.src}
+                        alt={item.alt || ""}
+                        className="gallery-img"
+                        width={400}
+                        height={300}
+                        sizes="(max-width: 480px) 100vw, (max-width: 768px) 50vw, 33vw"
+                        style={{ objectFit: "cover" }}
+                      />
+                      <div className="gallery-overlay">
+                        <div className="gallery-caption">
+                          {item.alt || item.category}
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))}
+                  ))}
               </div>
             </div>
           </div>
@@ -232,7 +260,7 @@ export default function AboutContent({ initialData }) {
               <i className="fas fa-times"></i>
             </span>
             <Image
-              src={lightbox.currentImg}
+              src={(process.env.NEXT_PUBLIC_BASE_PATH || "") + lightbox.currentImg}
               alt={lightbox.currentCaption}
               className="lightbox-img"
               width={1000}

@@ -31,7 +31,7 @@ export default function FoundationContent({ initialData: data }) {
               <div className="foundation-logo-container">
                 {data.logo && (
                   <Image
-                    src={data.logo}
+                    src={(process.env.NEXT_PUBLIC_BASE_PATH || "") + data.logo}
                     alt="Foundation Logo"
                     className="img-fluid rounded foundation-logo"
                     width={300}
@@ -76,7 +76,7 @@ export default function FoundationContent({ initialData: data }) {
                 <div className="initiative-card">
                   <div className="initiative-img-container">
                     <Image
-                      src={initiative.image || "/vidyasthanam/img/default-banner.jpg"}
+                      src={(process.env.NEXT_PUBLIC_BASE_PATH || "") + (initiative.image || "/img/default-banner.jpg")}
                       className="initiative-img card-img-top"
                       alt={initiative.title}
                       width={400}

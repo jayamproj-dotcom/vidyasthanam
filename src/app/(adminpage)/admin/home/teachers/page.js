@@ -285,7 +285,7 @@ export default function TeachersPage() {
           <h4>Header Settings</h4>
           <div className={styles.grid}>
             <div className={`${styles.formGroup} ${styles.fullWidth}`}>
-              <label>Section Title</label>
+              <label>Section Title <span style={{ color: "red" }}>*</span></label>
               <input
                 type="text"
                 name="title"
@@ -294,7 +294,7 @@ export default function TeachersPage() {
               />
             </div>
             <div className={`${styles.formGroup} ${styles.fullWidth}`}>
-              <label>Intro Description</label>
+              <label>Intro Description <span style={{ color: "red" }}>*</span></label>
               <input
                 type="text"
                 name="desc"
@@ -350,7 +350,12 @@ export default function TeachersPage() {
                       (t.avatar.startsWith("/") ||
                         t.avatar.startsWith("http")) ? (
                         <img
-                          src={t.avatar}
+                          src={
+                            (t.avatar?.startsWith("data:")
+                              ? ""
+                              : process.env.NEXT_PUBLIC_BASE_PATH || "") +
+                            t.avatar
+                          }
                           alt="Profile"
                           style={{
                             width: "100%",

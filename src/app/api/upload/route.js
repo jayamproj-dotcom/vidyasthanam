@@ -41,7 +41,7 @@ export async function POST(request) {
     await writeFile(filePath, buffer);
 
     // Return the public path
-    const publicPath = `/vidyasthanam/uploads/events/${cleanFileName}`;
+    const publicPath = `/uploads/events/${cleanFileName}`;
 
     return NextResponse.json({
       success: true,

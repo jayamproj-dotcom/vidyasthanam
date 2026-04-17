@@ -22,22 +22,22 @@ const Navbar = ({ initialData = [] }) => {
     setMounted(true);
 
     // Fallback fetch if no data was provided by server
-    if (navItems.length === 0) {
-      const fetchNav = async () => {
-        try {
-          const res = await api.get("/navbar");
-          if (res.success) {
-            const active = res.data
-              .filter((item) => item.isActive)
-              .sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
-            setNavItems(active);
-          }
-        } catch (err) {
-          console.error("Failed to load nav", err);
-        }
-      };
-      fetchNav();
-    }
+    // if (navItems.length === 0) {
+    //   const fetchNav = async () => {
+    //     try {
+    //       const res = await api.get("/navbar");
+    //       if (res.success) {
+    //         const active = res.data
+    //           .filter((item) => item.isActive)
+    //           .sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+    //         setNavItems(active);
+    //       }
+    //     } catch (err) {
+    //       console.error("Failed to load nav", err);
+    //     }
+    //   };
+    //   fetchNav();
+    // }
 
     const handleScroll = () => setScrolled(window.scrollY > 50);
     window.addEventListener("scroll", handleScroll);

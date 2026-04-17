@@ -86,11 +86,13 @@ export default function MasterCoursesEditor() {
         const json = await api.get("/courses");
         if (!json.success) throw new Error(json.message);
 
-        const { metaTitle, metaKeywords, metaDescription, isActive, courses: c } =
-          json.data;
+        if (json.data) {
+          const { metaTitle, metaKeywords, metaDescription, isActive, courses: c } =
+            json.data;
 
-        setPageData({ metaTitle, metaKeywords, metaDescription, isActive });
-        setCourses(c || []);
+          setPageData({ metaTitle, metaKeywords, metaDescription, isActive });
+          setCourses(c || []);
+        }
       } catch (err) {
         addToast(`Failed to load data: ${err.message}`, "error");
       } finally {

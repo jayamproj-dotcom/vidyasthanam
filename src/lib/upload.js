@@ -24,8 +24,7 @@ export const saveBase64Image = async (base64String, folder = "uploads") => {
     fs.writeFileSync(filePath, buffer);
 
     // Return the public URL
-    const basePath = process.env.NEXT_PUBLIC_BASE_PATH || "";
-    return `${basePath}/${folder}/${fileName}`;
+    return `/${folder}/${fileName}`;
   } catch (error) {
     console.error("Error saving image:", error);
     throw new Error("Failed to save image");

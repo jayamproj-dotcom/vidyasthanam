@@ -11,11 +11,11 @@ export async function GET() {
 
         const home = await Home.findOne({}).select("foundation");
 
-        if (!home) {
-            return Response.json(
-                { success: false, message: "Data not found" },
-                { status: 404 }
-            );
+        if (!home || !home.foundation) {
+            return Response.json({
+                success: true,
+                data: { title: "", desc: "", images: [""], isActive: true }
+            });
         }
 
         return Response.json({ success: true, data: home.foundation });

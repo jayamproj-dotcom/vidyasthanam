@@ -19,7 +19,7 @@ const useIntersectionObserver = (options = {}) => {
           observer.disconnect();
         }
       },
-      { threshold: 0.1, ...options }
+      { threshold: 0.1, ...options },
     );
 
     if (ref.current) observer.observe(ref.current);
@@ -67,7 +67,11 @@ const LazyTableImage = React.memo(({ src, alt, height = 45, width = 80 }) => {
       {/* Render <img> only when scrolled into view */}
       {isVisible && src ? (
         <img
-          src={src}
+          src={
+            (src?.startsWith("data:")
+              ? ""
+              : process.env.NEXT_PUBLIC_BASE_PATH || "") + src
+          }
           alt={alt}
           onLoad={() => setLoaded(true)}
           style={{
@@ -89,7 +93,10 @@ const LazyTableImage = React.memo(({ src, alt, height = 45, width = 80 }) => {
             justifyContent: "center",
           }}
         >
-          <i className="fas fa-image" style={{ color: "#ccc", fontSize: "14px" }} />
+          <i
+            className="fas fa-image"
+            style={{ color: "#ccc", fontSize: "14px" }}
+          />
         </div>
       ) : null}
     </div>
@@ -104,8 +111,16 @@ const Toast = ({ message, type, onClose }) => {
   }, [onClose]);
 
   return (
-    <div className={`${styles.toast} ${type === "success" ? styles.toastSuccess : styles.toastError}`}>
-      <i className={type === "success" ? "fas fa-check-circle" : "fas fa-exclamation-circle"}></i>
+    <div
+      className={`${styles.toast} ${type === "success" ? styles.toastSuccess : styles.toastError}`}
+    >
+      <i
+        className={
+          type === "success"
+            ? "fas fa-check-circle"
+            : "fas fa-exclamation-circle"
+        }
+      ></i>
       <div className={styles.toastContent}>
         <p>{message}</p>
       </div>
@@ -127,7 +142,7 @@ export default function NavbarPage() {
     path: "",
     bannerImage: "",
     isActive: true,
-    order: 0
+    order: 0,
   });
 
   const addToast = (message, type) => {
@@ -135,13 +150,13 @@ export default function NavbarPage() {
   };
 
   const removeToast = (id) => {
-    setToasts(toasts.filter(t => t.id !== id));
+    setToasts(toasts.filter((t) => t.id !== id));
   };
 
   const fetchItems = async () => {
     try {
       const res = await api.get("/navbar");
-      if (res.success) setNavItems(res.data);
+      if (res.success && res.data) setNavItems(res.data);
     } catch (error) {
       addToast("Failed to load navbar items", "error");
     } finally {
@@ -164,7 +179,7 @@ export default function NavbarPage() {
         path: "",
         bannerImage: "",
         isActive: true,
-        order: navItems.length
+        order: navItems.length,
       });
     }
     setIsModalOpen(true);
@@ -210,10 +225,16 @@ export default function NavbarPage() {
 
   const toggleStatus = async (item) => {
     try {
-      const res = await api.patch("/navbar", { id: item._id, isActive: !item.isActive });
+      const res = await api.patch("/navbar", {
+        id: item._id,
+        isActive: !item.isActive,
+      });
       if (res.success) {
         fetchItems();
-        addToast(`Status: ${!item.isActive ? "Active" : "Inactive"}`, "success");
+        addToast(
+          `Status: ${!item.isActive ? "Active" : "Inactive"}`,
+          "success",
+        );
       }
     } catch (error) {
       addToast("Failed to update status", "error");
@@ -266,7 +287,12 @@ export default function NavbarPage() {
     }
   };
 
-  if (fetching) return <div className={styles.loadingContainer}><i className="fas fa-spinner fa-spin fa-2x"></i></div>;
+  if (fetching)
+    return (
+      <div className={styles.loadingContainer}>
+        <i className="fas fa-spinner fa-spin fa-2x"></i>
+      </div>
+    );
 
   return (
     <div>
@@ -279,7 +305,9 @@ export default function NavbarPage() {
       `}</style>
 
       <div className={styles.toastContainer}>
-        {toasts.map(t => <Toast key={t.id} {...t} onClose={() => removeToast(t.id)} />)}
+        {toasts.map((t) => (
+          <Toast key={t.id} {...t} onClose={() => removeToast(t.id)} />
+        ))}
       </div>
 
       <div className={styles.contentHeader}>
@@ -290,8 +318,8 @@ export default function NavbarPage() {
         <div className={styles.listHeader}>
           <h3 className={styles.listTitle}>Navigation Links</h3>
           <button className={styles.uploadBtn} onClick={() => openModal()}>
-          <i className="fas fa-plus"></i> Add New Link
-        </button>
+            <i className="fas fa-plus"></i> Add New Link
+          </button>
         </div>
         <div className={styles.formSection} style={{ borderBottom: "none" }}>
           <table className={styles.adminTable}>
@@ -312,13 +340,22 @@ export default function NavbarPage() {
                     <LazyTableImage src={item.bannerImage} alt={item.name} />
                   </td>
                   <td style={{ fontWeight: "700" }}>{item.name}</td>
-                  <td style={{ color: "#FF7703", fontSize: "12px" }}>{item.path}</td>
+                  <td style={{ color: "#FF7703", fontSize: "12px" }}>
+                    {item.path}
+                  </td>
                   <td style={{ textAlign: "center" }}>
                     <select
                       value={i}
-                      onChange={(e) => updateNavOrder(i, parseInt(e.target.value))}
+                      onChange={(e) =>
+                        updateNavOrder(i, parseInt(e.target.value))
+                      }
                       className={styles.select}
-                      style={{ width: "60px", padding: "5px", borderRadius: "4px", border: "1px solid #ddd" }}
+                      style={{
+                        width: "60px",
+                        padding: "5px",
+                        borderRadius: "4px",
+                        border: "1px solid #ddd",
+                      }}
                     >
                       {navItems.map((_, idx) => (
                         <option key={idx} value={idx}>
@@ -328,21 +365,42 @@ export default function NavbarPage() {
                     </select>
                   </td>
                   <td>
-                    <div className={styles.toggleWrapper} onClick={() => toggleStatus(item)} style={{ transform: "scale(0.8)", display: "inline-flex" }}>
-                      <span className={item.isActive ? styles.statusActive : styles.statusInactive}>
+                    <div
+                      className={styles.toggleWrapper}
+                      onClick={() => toggleStatus(item)}
+                      style={{
+                        transform: "scale(0.8)",
+                        display: "inline-flex",
+                      }}
+                    >
+                      <span
+                        className={
+                          item.isActive
+                            ? styles.statusActive
+                            : styles.statusInactive
+                        }
+                      >
                         {item.isActive ? "Active" : "Inactive"}
                       </span>
-                      <div className={`${styles.toggleSwitch} ${item.isActive ? styles.toggleOn : ""}`}>
+                      <div
+                        className={`${styles.toggleSwitch} ${item.isActive ? styles.toggleOn : ""}`}
+                      >
                         <div className={styles.toggleHandle}></div>
                       </div>
                     </div>
                   </td>
                   <td>
                     <div className={styles.actionContainer}>
-                      <button className={styles.editBtn} onClick={() => openModal(item)}>
+                      <button
+                        className={styles.editBtn}
+                        onClick={() => openModal(item)}
+                      >
                         <i className="fas fa-edit"></i>
                       </button>
-                      <button className={styles.deleteBtn} onClick={() => deleteItem(item._id)}>
+                      <button
+                        className={styles.deleteBtn}
+                        onClick={() => deleteItem(item._id)}
+                      >
                         <i className="fas fa-trash-alt"></i>
                       </button>
                     </div>
@@ -355,35 +413,70 @@ export default function NavbarPage() {
       </div>
 
       {isModalOpen && (
-        <div className={styles.modalOverlay} onClick={() => setIsModalOpen(false)}>
-          <div className={styles.modalContent} style={{ maxWidth: "600px" }} onClick={e => e.stopPropagation()}>
+        <div
+          className={styles.modalOverlay}
+          onClick={() => setIsModalOpen(false)}
+        >
+          <div
+            className={styles.modalContent}
+            style={{ maxWidth: "600px" }}
+            onClick={(e) => e.stopPropagation()}
+          >
             <div className={styles.modalHeader}>
               <h3>{editId ? "Edit Link" : "Add New Navbar Link"}</h3>
-              <button className={styles.closeBtn} onClick={() => setIsModalOpen(false)}><i className="fas fa-times"></i></button>
+              <button
+                className={styles.closeBtn}
+                onClick={() => setIsModalOpen(false)}
+              >
+                <i className="fas fa-times"></i>
+              </button>
             </div>
             <div className={styles.modalBody}>
               <div className={styles.grid}>
                 <div className={styles.formGroup}>
                   <label>Display Name</label>
-                  <input type="text" value={tempItem.name} onChange={e => setTempItem({ ...tempItem, name: e.target.value })} placeholder="e.g. About Us" />
+                  <input
+                    type="text"
+                    value={tempItem.name}
+                    onChange={(e) =>
+                      setTempItem({ ...tempItem, name: e.target.value })
+                    }
+                    placeholder="e.g. About Us"
+                  />
                 </div>
                 <div className={styles.formGroup}>
                   <label>Page Path</label>
-                  <input 
-                    type="text" 
-                    value={tempItem.path} 
-                    onChange={e => setTempItem({ ...tempItem, path: e.target.value })} 
-                    placeholder="e.g. /about" 
+                  <input
+                    type="text"
+                    value={tempItem.path}
+                    onChange={(e) =>
+                      setTempItem({ ...tempItem, path: e.target.value })
+                    }
+                    placeholder="e.g. /about"
                     disabled={!!editId}
-                    style={editId ? { opacity: 0.6, cursor: "not-allowed" } : {}}
+                    style={
+                      editId ? { opacity: 0.6, cursor: "not-allowed" } : {}
+                    }
                   />
                 </div>
                 <div className={`${styles.formGroup} ${styles.fullWidth}`}>
                   <label>Page Header Banner Image</label>
                   <div className={styles.uploadContainer}>
-                    <div className={styles.previewBox} style={{ height: "150px" }}>
+                    <div
+                      className={styles.previewBox}
+                      style={{ height: "150px" }}
+                    >
                       {tempItem.bannerImage ? (
-                        <img loading="lazy" src={tempItem.bannerImage.startsWith("data:image") ? tempItem.bannerImage : (tempItem.bannerImage.startsWith("http") ? tempItem.bannerImage : `${tempItem.bannerImage}`)} alt="Banner" />
+                        <img
+                          loading="lazy"
+                          src={
+                            (tempItem.bannerImage?.startsWith("data:")
+                              ? ""
+                              : process.env.NEXT_PUBLIC_BASE_PATH || "") +
+                            tempItem.bannerImage
+                          }
+                          alt="Banner"
+                        />
                       ) : (
                         <div className={styles.noImage}>
                           <i className="fas fa-image fa-2x"></i>
@@ -392,32 +485,59 @@ export default function NavbarPage() {
                       )}
                     </div>
                     <div className={styles.fileInputWrapper}>
-                      <button className={styles.uploadBtn} style={{ width: "100%" }}>
+                      <button
+                        className={styles.uploadBtn}
+                        style={{ width: "100%" }}
+                      >
                         <i className="fas fa-upload"></i> Upload Banner Image
                       </button>
-                      <input type="file" accept="image/*" onChange={handleImageUpload} />
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={handleImageUpload}
+                      />
                     </div>
                   </div>
                 </div>
                 <div className={styles.formGroup}>
                   <label>Display Order</label>
                   <small style={{ color: "#666", fontSize: "11px" }}>
-                  Determines position in the slider (0 is first)
-                </small>
+                    Determines position in the slider (0 is first)
+                  </small>
 
-                  <input 
-                    type="number" 
-                    value={tempItem.order ?? 0} 
-                    onChange={e => setTempItem({ ...tempItem, order: e.target.value === "" ? 0 : parseInt(e.target.value) })} 
+                  <input
+                    type="number"
+                    value={tempItem.order ?? 0}
+                    onChange={(e) =>
+                      setTempItem({
+                        ...tempItem,
+                        order:
+                          e.target.value === "" ? 0 : parseInt(e.target.value),
+                      })
+                    }
                   />
                 </div>
                 <div className={styles.formGroup}>
                   <label>Visibility Status</label>
-                  <div className={styles.toggleWrapper} onClick={() => setTempItem({ ...tempItem, isActive: !tempItem.isActive })} style={{ marginTop: "8px" }}>
-                    <span className={tempItem.isActive ? styles.statusActive : styles.statusInactive}>
+                  <div
+                    className={styles.toggleWrapper}
+                    onClick={() =>
+                      setTempItem({ ...tempItem, isActive: !tempItem.isActive })
+                    }
+                    style={{ marginTop: "8px" }}
+                  >
+                    <span
+                      className={
+                        tempItem.isActive
+                          ? styles.statusActive
+                          : styles.statusInactive
+                      }
+                    >
                       {tempItem.isActive ? "Active" : "Inactive"}
                     </span>
-                    <div className={`${styles.toggleSwitch} ${tempItem.isActive ? styles.toggleOn : ""}`}>
+                    <div
+                      className={`${styles.toggleSwitch} ${tempItem.isActive ? styles.toggleOn : ""}`}
+                    >
                       <div className={styles.toggleHandle}></div>
                     </div>
                   </div>
@@ -425,8 +545,17 @@ export default function NavbarPage() {
               </div>
             </div>
             <div className={styles.modalFooter}>
-              <button className={styles.saveChangesBtn} style={{ width: "100%" }} onClick={handleSave} disabled={loading}>
-                {loading ? <i className="fas fa-spinner fa-spin"></i> : "Save Link Settings"}
+              <button
+                className={styles.saveChangesBtn}
+                style={{ width: "100%" }}
+                onClick={handleSave}
+                disabled={loading}
+              >
+                {loading ? (
+                  <i className="fas fa-spinner fa-spin"></i>
+                ) : (
+                  "Save Link Settings"
+                )}
               </button>
             </div>
           </div>

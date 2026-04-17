@@ -19,16 +19,19 @@ const getInitials = (name) => {
 const TeachersSection = dynamic(
   () =>
     Promise.resolve(({ home }) => {
-      const activeTeachers = home?.teacher?.teachers?.filter((t) => t.isActive !== false) || [];
+      const activeTeachers =
+        home?.teacher?.teachers?.filter((t) => t.isActive !== false) || [];
       const isScrollable = activeTeachers.length > 3;
-      const displayTeachers = isScrollable ? [...activeTeachers, ...activeTeachers] : activeTeachers;
+      const displayTeachers = isScrollable
+        ? [...activeTeachers, ...activeTeachers]
+        : activeTeachers;
 
       return (
         <section className="teachers-section py-5">
           <div className={styles.customContainer}>
             <div className="section-header text-center mb-5">
-              <h2 className="mb-3 section-title">{home?.teacher?.title || "Meet Our Teachers"}</h2>
-              <p className="lead">{home?.teacher?.desc || ""}</p>
+              <h2 className="mb-3 section-title">{home?.teacher?.title}</h2>
+              <p className="lead">{home?.teacher?.desc}</p>
             </div>
 
             {isScrollable ? (
@@ -39,10 +42,23 @@ const TeachersSection = dynamic(
                       <div className="teacher-card text-center p-4 h-100 rounded">
                         <div className="teacher-img mb-4 rounded-circle overflow-hidden mx-auto">
                           <div className="staff-avatar">
-                            {teacher.avatar && (teacher.avatar.startsWith("/") || teacher.avatar.startsWith("http") || teacher.avatar.startsWith("data:")) ? (
-                              <img src={teacher.avatar} alt={teacher.name} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                            {teacher.avatar &&
+                            (teacher.avatar.startsWith("/") ||
+                              teacher.avatar.startsWith("http") ||
+                              teacher.avatar.startsWith("data:")) ? (
+                              <img
+                                src={(process.env.NEXT_PUBLIC_BASE_PATH || "") + teacher.avatar}
+                                alt={teacher.name}
+                                style={{
+                                  width: "100%",
+                                  height: "100%",
+                                  objectFit: "cover",
+                                }}
+                              />
                             ) : (
-                              <div className="initials-circle">{getInitials(teacher.name)}</div>
+                              <div className="initials-circle">
+                                {getInitials(teacher.name)}
+                              </div>
                             )}
                           </div>
                         </div>
@@ -61,10 +77,23 @@ const TeachersSection = dynamic(
                     <div className="teacher-card text-center p-4 h-100 rounded">
                       <div className="teacher-img mb-4 rounded-circle overflow-hidden mx-auto">
                         <div className="staff-avatar">
-                          {teacher.avatar && (teacher.avatar.startsWith("/") || teacher.avatar.startsWith("http") || teacher.avatar.startsWith("data:")) ? (
-                            <img src={teacher.avatar} alt={teacher.name} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                          {teacher.avatar &&
+                          (teacher.avatar.startsWith("/") ||
+                            teacher.avatar.startsWith("http") ||
+                            teacher.avatar.startsWith("data:")) ? (
+                            <img
+                              src={(process.env.NEXT_PUBLIC_BASE_PATH || "") + teacher.avatar}
+                              alt={teacher.name}
+                              style={{
+                                width: "100%",
+                                height: "100%",
+                                objectFit: "cover",
+                              }}
+                            />
                           ) : (
-                            <div className="initials-circle">{getInitials(teacher.name)}</div>
+                            <div className="initials-circle">
+                              {getInitials(teacher.name)}
+                            </div>
                           )}
                         </div>
                       </div>
@@ -80,20 +109,29 @@ const TeachersSection = dynamic(
         </section>
       );
     }),
-  { ssr: true }
+  { ssr: true },
 );
 
 const FoundationSection = ({ home }) => (
   <div className="vf-about-section">
     <div className="vf-content-wrapper">
-      <h3 className="vf-section-heading">{home?.foundation?.title || "Vidyasthanam Foundation"}</h3>
-      <p className="vf-content-text">{home?.foundation?.desc || ""}</p>
-      <Link href="/vidyasthanam-foundation" className="vf-action-button">Know More</Link>
+      <h3 className="vf-section-heading">{home?.foundation?.title}</h3>
+      <p className="vf-content-text">{home?.foundation?.desc}</p>
+      <Link href="/vidyasthanam-foundation" className="vf-action-button">
+        Know More
+      </Link>
       <div className="vf-decoration-element"></div>
     </div>
     <div className="vf-image-container">
       {home?.foundation?.images?.[0] && (
-        <Image src={home.foundation.images[0]} alt={home.foundation.title} className="vf-featured-image vf-image" width={400} height={400} style={{ objectFit: "contain" }} />
+        <Image
+          src={(process.env.NEXT_PUBLIC_BASE_PATH || "") + home.foundation.images[0]}
+          alt={home.foundation.title}
+          className="vf-featured-image vf-image"
+          width={400}
+          height={400}
+          style={{ objectFit: "contain" }}
+        />
       )}
     </div>
   </div>
@@ -102,17 +140,20 @@ const FoundationSection = ({ home }) => (
 const CoursesSection = dynamic(
   () =>
     Promise.resolve(({ home }) => {
-      const activeCourses = home?.course?.courses?.filter((c) => c.isActive !== false) || [];
+      const activeCourses =
+        home?.course?.courses?.filter((c) => c.isActive !== false) || [];
       const isScrollable = activeCourses.length > 3;
-      const displayCourses = isScrollable ? [...activeCourses, ...activeCourses] : activeCourses;
+      const displayCourses = isScrollable
+        ? [...activeCourses, ...activeCourses]
+        : activeCourses;
 
       return (
         <section
           id="courses"
           className="courses-section py-5"
           style={{
-            backgroundImage: home?.course?.bgImage 
-              ? `url(${home.course.bgImage})` 
+            backgroundImage: home?.course?.bgImage
+              ? `url(${(process.env.NEXT_PUBLIC_BASE_PATH || "") + home.course.bgImage})`
               : "",
             backgroundRepeat: "no-repeat",
             backgroundPosition: "center center",
@@ -121,8 +162,8 @@ const CoursesSection = dynamic(
         >
           <div className={styles.customContainer}>
             <div className="section-header text-center mb-5">
-              <h2 className="mb-3 section-title">{home?.course?.title || "Our Courses"}</h2>
-              <p className="lead">{home?.course?.desc || ""}</p>
+              <h2 className="mb-3 section-title">{home?.course?.title}</h2>
+              <p className="lead">{home?.course?.desc}</p>
             </div>
 
             {isScrollable ? (
@@ -133,9 +174,20 @@ const CoursesSection = dynamic(
                       <div className="course-card-icon text-center p-5 h-100">
                         <div className="course-icon mb-4">
                           {course.bgImage ? (
-                            <img src={course.bgImage} alt={course.name} style={{ width: '80px', height: '80px', objectFit: 'cover', borderRadius: '15px' }} />
+                            <img
+                              src={(process.env.NEXT_PUBLIC_BASE_PATH || "") + course.bgImage}
+                              alt={course.name}
+                              style={{
+                                width: "80px",
+                                height: "80px",
+                                objectFit: "cover",
+                                borderRadius: "15px",
+                              }}
+                            />
                           ) : (
-                            <i className={`${course.icon || 'fas fa-music'} fa-4x text-orange`}></i>
+                            <i
+                              className={`${course.icon || "fas fa-music"} fa-4x text-orange`}
+                            ></i>
                           )}
                         </div>
                         <h3>{course.name}</h3>
@@ -143,7 +195,10 @@ const CoursesSection = dynamic(
                         <div className="course-details mt-4">
                           <ul className="text-start">
                             {course.points?.map((point, i) => (
-                              <li key={i}><i className="fas fa-check text-orange me-2"></i> {point}</li>
+                              <li key={i}>
+                                <i className="fas fa-check text-orange me-2"></i>{" "}
+                                {point}
+                              </li>
                             ))}
                           </ul>
                         </div>
@@ -159,9 +214,20 @@ const CoursesSection = dynamic(
                     <div className="course-card-icon text-center p-5 h-100">
                       <div className="course-icon mb-4">
                         {course.bgImage ? (
-                          <img src={course.bgImage} alt={course.name} style={{ width: '80px', height: '80px', objectFit: 'cover', borderRadius: '15px' }} />
+                          <img
+                            src={(process.env.NEXT_PUBLIC_BASE_PATH || "") + course.bgImage}
+                            alt={course.name}
+                            style={{
+                              width: "80px",
+                              height: "80px",
+                              objectFit: "cover",
+                              borderRadius: "15px",
+                            }}
+                          />
                         ) : (
-                          <i className={`${course.icon || 'fas fa-music'} fa-4x text-orange`}></i>
+                          <i
+                            className={`${course.icon || "fas fa-music"} fa-4x text-orange`}
+                          ></i>
                         )}
                       </div>
                       <h3>{course.name}</h3>
@@ -169,7 +235,10 @@ const CoursesSection = dynamic(
                       <div className="course-details mt-4">
                         <ul className="text-start">
                           {course.points?.map((point, i) => (
-                            <li key={i}><i className="fas fa-check text-orange me-2"></i> {point}</li>
+                            <li key={i}>
+                              <i className="fas fa-check text-orange me-2"></i>{" "}
+                              {point}
+                            </li>
                           ))}
                         </ul>
                       </div>
@@ -179,28 +248,33 @@ const CoursesSection = dynamic(
               </div>
             )}
             <div className="text-center mt-5">
-               <Link href="/courses" className="event-btn">View All Courses</Link>
+              <Link href="/courses" className="event-btn">
+                View All Courses
+              </Link>
             </div>
           </div>
         </section>
       );
     }),
-  { ssr: true }
+  { ssr: true },
 );
 
 const EventsSection = dynamic(
   () =>
     Promise.resolve(({ home }) => {
-      const activeVideos = home?.events?.videos?.filter((v) => v.isActive !== false) || [];
+      const activeVideos =
+        home?.events?.videos?.filter((v) => v.isActive !== false) || [];
       const isScrollable = activeVideos.length > 3;
-      const displayVideos = isScrollable ? [...activeVideos, ...activeVideos] : activeVideos;
+      const displayVideos = isScrollable
+        ? [...activeVideos, ...activeVideos]
+        : activeVideos;
 
       return (
         <section id="events" className="events-section py-5">
           <div className={styles.customContainer}>
             <div className="section-header text-center mb-5">
-              <h2 className="mb-3 section-title">{home?.events?.title || "Our Events"}</h2>
-              <p className="lead">{home?.events?.desc || ""}</p>
+              <h2 className="mb-3 section-title">{home?.events?.title}</h2>
+              <p className="lead">{home?.events?.desc}</p>
             </div>
 
             {isScrollable ? (
@@ -211,14 +285,26 @@ const EventsSection = dynamic(
                       <div className="event-card h-100">
                         <div className="event-img">
                           <div className="ratio ratio-16x9">
-                            <iframe width="560" height="315" src={video.link} title={video.desc} frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" loading="lazy" referrerPolicy="strict-origin-when-cross-origin" allowFullScreen></iframe>
+                            <iframe
+                              width="560"
+                              height="315"
+                              src={video.link}
+                              title={video.desc}
+                              frameBorder="0"
+                              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                              loading="lazy"
+                              referrerPolicy="strict-origin-when-cross-origin"
+                              allowFullScreen
+                            ></iframe>
                           </div>
                           <div className="event-date">
                             <span className="day">{video.date?.day}</span>
                             <span className="month">{video.date?.month}</span>
                           </div>
                         </div>
-                        <div className="event-content p-4"><p className="mb-3">{video.desc}</p></div>
+                        <div className="event-content p-4">
+                          <p className="mb-3">{video.desc}</p>
+                        </div>
                       </div>
                     </div>
                   ))}
@@ -226,51 +312,68 @@ const EventsSection = dynamic(
               </div>
             ) : (
               <div className="row">
-                 {activeVideos.map((video, index) => (
+                {activeVideos.map((video, index) => (
                   <div key={index} className="col-lg-4 col-md-6 mb-4">
                     <div className="event-card h-100">
                       <div className="event-img">
                         <div className="ratio ratio-16x9">
-                           <iframe width="560" height="315" src={video.link} title={video.desc} frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" loading="lazy" referrerPolicy="strict-origin-when-cross-origin" allowFullScreen></iframe>
+                          <iframe
+                            width="560"
+                            height="315"
+                            src={video.link}
+                            title={video.desc}
+                            frameBorder="0"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                            loading="lazy"
+                            referrerPolicy="strict-origin-when-cross-origin"
+                            allowFullScreen
+                          ></iframe>
                         </div>
                         <div className="event-date">
                           <span className="day">{video.date?.day}</span>
                           <span className="month">{video.date?.month}</span>
                         </div>
                       </div>
-                      <div className="event-content p-4"><p className="mb-3">{video.desc}</p></div>
+                      <div className="event-content p-4">
+                        <p className="mb-3">{video.desc}</p>
+                      </div>
                     </div>
                   </div>
                 ))}
               </div>
             )}
             <div className="text-center mt-5">
-               <Link href="/events" className="event-btn">View All Events</Link>
+              <Link href="/events" className="event-btn">
+                View All Events
+              </Link>
             </div>
           </div>
         </section>
       );
     }),
-  { ssr: true }
+  { ssr: true },
 );
 
 export default function HomeContent({ home }) {
   const [activeIndex, setActiveIndex] = useState(0);
-  const activeSlides = home?.slider?.slides?.filter(s => s.isActive !== false) || [];
+  const activeSlides =
+    home?.slider?.slides?.filter((s) => s.isActive !== false) || [];
 
   useEffect(() => {
     // Hide preloader when component mounts
-    const loader = document.getElementById('loader');
+    const loader = document.getElementById("loader");
     if (loader) {
-      loader.classList.add('fade-out');
+      loader.classList.add("fade-out");
       setTimeout(() => {
-        loader.style.display = 'none';
+        loader.style.display = "none";
       }, 500); // Match transition duration in CSS
     }
 
     if (activeSlides.length <= 1) return;
     const interval = setInterval(() => {
-      setActiveIndex((prev) => (prev === activeSlides.length - 1 ? 0 : prev + 1));
+      setActiveIndex((prev) =>
+        prev === activeSlides.length - 1 ? 0 : prev + 1,
+      );
     }, 4500);
     return () => clearInterval(interval);
   }, [activeSlides.length]);
@@ -278,53 +381,91 @@ export default function HomeContent({ home }) {
   return (
     <>
       {home?.slider?.isActive !== false && (
-      <header className="hero-section">
-        <div className="heroSlider">
-          {activeSlides.map((slide, index) => (
-            <div key={index} className={`slide ${index === activeIndex ? "active" : ""}`}>
-              <Image src={slide.image} alt="Slide Image" fill className="slideImage" priority={index === 0} sizes="100vw" quality={85} />
-            </div>
-          ))}
-        </div>
+        <header className="hero-section">
+          <div className="heroSlider">
+            {activeSlides.map((slide, index) => (
+              <div
+                key={index}
+                className={`slide ${index === activeIndex ? "active" : ""}`}
+              >
+                <Image
+                  src={(process.env.NEXT_PUBLIC_BASE_PATH || "") + slide.image}
+                  alt="Slide Image"
+                  fill
+                  className="slideImage"
+                  priority={index === 0}
+                  sizes="100vw"
+                  quality={85}
+                />
+              </div>
+            ))}
+          </div>
 
-        <div className={`${styles.customContainer} hero-content`}>
-          <div className="row align-items-center">
-            <div className="col-lg-8">
-              <div className="hero-text">
-                <h1>
-                  {(home?.slider?.title || "School of Indian Music").split("Indian Music")[0]}
-                  <span style={{ color: "#FF7703" }}>
-                    Indian Music
-                    {(home?.slider?.title || "").split("Indian Music")[1] || ", Culture and Languages"}
-                  </span>
-                </h1>
-                <p>{home?.slider?.desc}</p>
-                <div className="d-flex flex-wrap align-items-center">
-                  <Link href="/courses" className="btn-orange btn-hero btn">Explore Courses</Link>
+          <div className={`${styles.customContainer} hero-content`}>
+            <div className="row align-items-center">
+              <div className="col-lg-8">
+                <div className="hero-text">
+                  <h1>
+                    {(home?.slider?.title).split("Indian Music")[0]}
+                    <span style={{ color: "#FF7703" }}>
+                      Indian Music
+                      {(home?.slider?.title).split("Indian Music")[1]}
+                    </span>
+                  </h1>
+                  <p>{home?.slider?.desc}</p>
+                  <div className="d-flex flex-wrap align-items-center">
+                    <Link href="/courses" className="btn-orange btn-hero btn">
+                      Explore Courses
+                    </Link>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-      </header>
+        </header>
       )}
 
       {/* --- Sections Rendering --- */}
-      
+
       <section id="about" className="about-section py-5">
         {home?.about?.isActive !== false && (
           <div className={styles.customContainer}>
             <div className="row align-items-center">
               <div className="col-lg-6 mb-4 mb-lg-0">
                 <div className="about-img text-center">
-                  {home?.about?.images?.[0] ? <Image src={home.about.images[0]} alt={home.about.title || "About"} className="img-fluid rounded" width={600} height={450} style={{ objectFit: "cover", height: "auto", width: "100%", maxWidth: "600px" }} /> : (<div className="rounded bg-light d-flex align-items-center justify-content-center" style={{ height: "400px" }}><i className="fas fa-image fa-4x text-muted"></i></div>)}
+                  {home?.about?.images?.[0] ? (
+                    <Image
+                      src={(process.env.NEXT_PUBLIC_BASE_PATH || "") + home.about.images[0]}
+                      alt={home.about.title || "About"}
+                      className="img-fluid rounded"
+                      width={600}
+                      height={450}
+                      style={{
+                        objectFit: "cover",
+                        height: "auto",
+                        width: "100%",
+                        maxWidth: "600px",
+                      }}
+                    />
+                  ) : (
+                    <div
+                      className="rounded bg-light d-flex align-items-center justify-content-center"
+                      style={{ height: "400px" }}
+                    >
+                      <i className="fas fa-image fa-4x text-muted"></i>
+                    </div>
+                  )}
                 </div>
               </div>
               <div className="col-lg-6">
                 <div className="about-content">
-                  <h2 className="mb-4 section-title1">{home?.about?.title || "About Us"}</h2>
-                  {home?.about?.desc?.split("\n\n").map((para, i) => (<p key={i}>{para.trim()}</p>))}
-                  <Link href="/about" className="btn btn-orange mt-3">Know more</Link>
+                  <h2 className="mb-4 section-title1">{home?.about?.title}</h2>
+                  {home?.about?.desc?.split("\n\n").map((para, i) => (
+                    <p key={i}>{para.trim()}</p>
+                  ))}
+                  <Link href="/about" className="btn btn-orange mt-3">
+                    Know more
+                  </Link>
                 </div>
               </div>
             </div>
@@ -333,7 +474,9 @@ export default function HomeContent({ home }) {
       </section>
 
       {home?.teacher?.isActive !== false && <TeachersSection home={home} />}
-      {home?.foundation?.isActive !== false && <FoundationSection home={home} />}
+      {home?.foundation?.isActive !== false && (
+        <FoundationSection home={home} />
+      )}
       {home?.course?.isActive !== false && <CoursesSection home={home} />}
       {home?.events?.isActive !== false && <EventsSection home={home} />}
 
@@ -341,10 +484,23 @@ export default function HomeContent({ home }) {
         {home?.journey?.isActive !== false && (
           <div className={styles.customContainer}>
             <div className="newsletter-box">
-              <h2>{home?.journey?.title || "Begin Your Musical Journey Today!"}</h2><br />
-              <p>{home?.journey?.desc}</p><br />
+              <h2>{home?.journey?.title}</h2>
+              <br />
+              <p>{home?.journey?.desc}</p>
+              <br />
               <div className="newsletter-form">
-                <Link href="/contact" className="btn btn-dark" style={{ alignSelf: "center", backgroundColor: "#181D23", color: "white", padding: "15px 40px" }}>Contact Us</Link>
+                <Link
+                  href="/contact"
+                  className="btn btn-dark"
+                  style={{
+                    alignSelf: "center",
+                    backgroundColor: "#181D23",
+                    color: "white",
+                    padding: "15px 40px",
+                  }}
+                >
+                  Contact Us
+                </Link>
               </div>
             </div>
           </div>

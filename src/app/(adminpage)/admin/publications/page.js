@@ -77,9 +77,11 @@ export default function MasterPublicationsEditor() {
         const json = await api.get("/publications");
         if (!json.success) throw new Error(json.message);
 
-        const { metaTitle, metaKeywords, metaDescription, isActive, publications, resources } = json.data;
-        setPageData({ metaTitle, metaKeywords, metaDescription, isActive });
-        setData({ publications: publications || [], resources: resources || [] });
+        if (json.data) {
+          const { metaTitle, metaKeywords, metaDescription, isActive, publications, resources } = json.data;
+          setPageData({ metaTitle, metaKeywords, metaDescription, isActive });
+          setData({ publications: publications || [], resources: resources || [] });
+        }
       } catch (err) {
         addToast(`Failed to load data: ${err.message}`, "error");
       } finally {

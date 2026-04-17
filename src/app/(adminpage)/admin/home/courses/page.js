@@ -65,7 +65,11 @@ const LazyTableImage = React.memo(({ src, alt, height = 60, width = 100 }) => {
 
       {isVisible && src ? (
         <img
-          src={src}
+          src={
+            (src?.startsWith("data:")
+              ? ""
+              : process.env.NEXT_PUBLIC_BASE_PATH || "") + src
+          }
           alt={alt}
           onLoad={() => setLoaded(true)}
           style={{
@@ -558,7 +562,12 @@ export default function CoursesPage() {
                 >
                   {courseData.bgImage ? (
                     <img
-                      src={courseData.bgImage}
+                      src={
+                        (courseData.bgImage?.startsWith("data:")
+                          ? ""
+                          : process.env.NEXT_PUBLIC_BASE_PATH || "") +
+                        courseData.bgImage
+                      }
                       alt="Section BG Preview"
                       style={{
                         width: "100%",

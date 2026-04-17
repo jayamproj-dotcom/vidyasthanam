@@ -69,7 +69,11 @@ const LazyTableImage = React.memo(({ src, alt, height = 45, width = 80 }) => {
       {/* Render <img> only when row is in the viewport */}
       {isVisible && src ? (
         <img
-          src={src}
+          src={
+            (src?.startsWith("data:")
+              ? ""
+              : process.env.NEXT_PUBLIC_BASE_PATH || "") + src
+          }
           alt={alt}
           onLoad={() => setLoaded(true)}
           style={{
@@ -862,7 +866,12 @@ export default function MasterAboutEditor() {
                     >
                       {tempData.images?.[0] ? (
                         <img
-                          src={tempData.images[0]}
+                          src={
+                            (tempData.images[0]?.startsWith("data:")
+                              ? ""
+                              : process.env.NEXT_PUBLIC_BASE_PATH || "") +
+                            tempData.images[0]
+                          }
                           alt="Story"
                           style={{ height: "100%", objectFit: "cover" }}
                         />
@@ -936,7 +945,12 @@ export default function MasterAboutEditor() {
                     >
                       {tempData.src ? (
                         <img
-                          src={tempData.src}
+                          src={
+                            (tempData.src?.startsWith("data:")
+                              ? ""
+                              : process.env.NEXT_PUBLIC_BASE_PATH || "") +
+                            tempData.src
+                          }
                           alt="Preview"
                           style={{ height: "100%", objectFit: "cover" }}
                         />

@@ -147,7 +147,7 @@ export default function PublicationsContent({ initialData }) {
                   </div>
                 )}
                 <iframe
-                  src={selectedPdf || "about:blank"}
+                  src={(process.env.NEXT_PUBLIC_BASE_PATH || "") + selectedPdf || "about:blank"}
                   className="w-100 border-0 rounded-3 h-100"
                   title="PDF Viewer"
                 ></iframe>

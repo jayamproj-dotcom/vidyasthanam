@@ -81,11 +81,13 @@ export default function MasterEventsEditor() {
         const json = await api.get("/events");
         if (!json.success) throw new Error(json.message);
 
-        const { metaTitle, metaKeywords, metaDescription, bannerImage, isActive, events: e } =
-          json.data;
+        if (json.data) {
+          const { metaTitle, metaKeywords, metaDescription, bannerImage, isActive, events: e } =
+            json.data;
 
-        setPageData({ metaTitle, metaKeywords, metaDescription, bannerImage, isActive });
-        setEvents(e || []);
+          setPageData({ metaTitle, metaKeywords, metaDescription, bannerImage, isActive });
+          setEvents(e || []);
+        }
       } catch (err) {
         addToast(`Failed to load data: ${err.message}`, "error");
       } finally {

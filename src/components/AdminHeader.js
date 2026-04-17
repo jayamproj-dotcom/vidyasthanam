@@ -36,7 +36,7 @@ const AdminHeader = ({ onMenuClick }) => {
         setAdmin(res.admin);
       }
     } catch (error) {
-      console.error("Failed to fetch admin profile", error);
+      console.log("Failed to fetch admin profile", error);
     }
   };
 

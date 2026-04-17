@@ -9,16 +9,6 @@ export async function GET() {
     await connectToDatabase();
 
     let doc = await Event.findOne();
-    if (!doc) {
-      // Create initial default data if none exists
-      doc = await Event.create({
-        metaTitle: "Events & Recordings | Vidyasthanam",
-        metaKeywords: "carnatic music, performance, veena, saraswati sainath, events",
-        metaDescription: "Watch our students and faculty performances and event recordings.",
-        isActive: true,
-        events: [],
-      });
-    }
 
     return NextResponse.json({ success: true, data: doc });
   } catch (err) {

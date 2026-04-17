@@ -226,7 +226,15 @@ export default function AboutPage() {
             >
               <div className={styles.previewBox} style={{ height: "250px" }}>
                 {aboutData.images[0] ? (
-                  <img src={aboutData.images[0]} alt="About Preview" />
+                  <img
+                    src={
+                      (aboutData.images[0]?.startsWith("data:")
+                        ? ""
+                        : process.env.NEXT_PUBLIC_BASE_PATH || "") +
+                      aboutData.images[0]
+                    }
+                    alt="About Preview"
+                  />
                 ) : (
                   <div className={styles.noImage}>
                     <i className="fas fa-image fa-2x"></i>

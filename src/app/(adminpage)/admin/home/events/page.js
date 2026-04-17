@@ -242,7 +242,7 @@ export default function EventsPage() {
           <h4>Header Settings</h4>
           <div className={styles.grid}>
             <div className={`${styles.formGroup} ${styles.fullWidth}`}>
-              <label>Section Title</label>
+              <label>Section Title <span style={{ color: "red" }}>*</span></label>
               <input
                 type="text"
                 name="title"
@@ -251,7 +251,7 @@ export default function EventsPage() {
               />
             </div>
             <div className={`${styles.formGroup} ${styles.fullWidth}`}>
-              <label>Intro Description</label>
+              <label>Intro Description <span style={{ color: "red" }}>*</span></label>
               <input
                 type="text"
                 name="desc"

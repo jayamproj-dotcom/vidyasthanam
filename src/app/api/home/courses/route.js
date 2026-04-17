@@ -16,8 +16,8 @@ export async function GET() {
       homeData && homeData.course
         ? homeData.course
         : {
-            title: "Our Courses",
-            desc: "Explore our programs",
+            title: "",
+            desc: "",
             bgImage: "",
             courses: [],
             isActive: true,

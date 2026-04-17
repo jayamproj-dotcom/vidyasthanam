@@ -37,7 +37,7 @@ export default function RegistrationAdminPage() {
       setLoading(true);
       try {
         const res = await api.get("/registration");
-        if (res.success) setPageData(res.data);
+        if (res.success && res.data) setPageData(res.data);
       } catch (err) { addToast("Failed to load registration data", "error"); }
       finally { setLoading(false); }
     })();

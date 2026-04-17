@@ -9,7 +9,14 @@ export async function GET() {
     try {
         await connectToDatabase();
         const home = await Home.findOne({}).select("about");
-        if (!home) return NextResponse.json({ success: false, message: "Data not found" }, { status: 404 });
+        
+        if (!home || !home.about) {
+            return NextResponse.json({ 
+                success: true, 
+                data: { title: "", desc: "", images: [], isActive: true } 
+            });
+        }
+
         return NextResponse.json({ success: true, data: home.about });
     } catch (error) {
         return NextResponse.json({ success: false, message: "Internal server error" }, { status: 500 });

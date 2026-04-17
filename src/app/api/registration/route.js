@@ -9,14 +9,6 @@ export async function GET() {
     await connectToDatabase();
 
     let doc = await Registration.findOne();
-    if (!doc) {
-      doc = await Registration.create({
-        metaTitle: "Student Registration | Vidyasthanam",
-        metaKeywords: "carnatic music registration, veena classes, enroll, music education",
-        metaDescription: "Register for our carnatic music and veena classes at Vidyasthanam.",
-        isActive: true,
-      });
-    }
 
     return NextResponse.json({ success: true, data: doc });
   } catch (err) {

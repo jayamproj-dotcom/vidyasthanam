@@ -11,15 +11,15 @@ export default function GalleryContent({ initialData }) {
   const [isOpen, setIsOpen] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  const images = (data.images || []).filter(img => img.isActive !== false);
+  const images = (data.images || []).filter((img) => img.isActive !== false);
 
   useEffect(() => {
     // Hide preloader when component mounts
-    const loader = document.getElementById('loader');
+    const loader = document.getElementById("loader");
     if (loader) {
-      loader.classList.add('fade-out');
+      loader.classList.add("fade-out");
       setTimeout(() => {
-        loader.style.display = 'none';
+        loader.style.display = "none";
       }, 500);
     }
 
@@ -83,9 +83,9 @@ export default function GalleryContent({ initialData }) {
           <h2 className="gallery-heading">Our Gallery</h2>
 
           {loading && images.length === 0 ? (
-             <div className="text-center py-5">
-               <i className="fas fa-spinner fa-spin fa-3x text-orange"></i>
-             </div>
+            <div className="text-center py-5">
+              <i className="fas fa-spinner fa-spin fa-3x text-orange"></i>
+            </div>
           ) : images.length > 0 ? (
             <div className="masonry-grid">
               {images.map((img, idx) => (
@@ -95,7 +95,7 @@ export default function GalleryContent({ initialData }) {
                   onClick={() => openSlider(idx)}
                 >
                   <Image
-                    src={img.src}
+                    src={(process.env.NEXT_PUBLIC_BASE_PATH || "") + img.src}
                     alt={img.alt || "Gallery Image"}
                     width={400}
                     height={300}
@@ -108,7 +108,9 @@ export default function GalleryContent({ initialData }) {
             </div>
           ) : (
             <div className="text-center py-5">
-              <p className="text-muted">No images available in the gallery yet.</p>
+              <p className="text-muted">
+                No images available in the gallery yet.
+              </p>
             </div>
           )}
         </div>
@@ -127,9 +129,9 @@ export default function GalleryContent({ initialData }) {
             </button>
             <div className="slider-frame">
               <Image
-                key={images[currentIndex].src}
+                key={(process.env.NEXT_PUBLIC_BASE_PATH || "") + images[currentIndex].src}
                 className="slider-main-img"
-                src={images[currentIndex].src}
+                src={(process.env.NEXT_PUBLIC_BASE_PATH || "") + images[currentIndex].src}
                 alt="zoom"
                 width={1200}
                 height={800}

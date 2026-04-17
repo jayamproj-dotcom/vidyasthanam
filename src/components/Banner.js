@@ -69,7 +69,7 @@ const LazyBannerImage = React.memo(({ src, alt }) => {
       {/* Render <img> only when scrolled into view */}
       {isVisible && src ? (
         <img
-          src={src}
+          src={(process.env.NEXT_PUBLIC_BASE_PATH || "") + src}
           alt={alt}
           onLoad={() => setLoaded(true)}
           style={{
@@ -141,7 +141,7 @@ const Banner = () => {
   // Hide banner on homepage as it usually has a slider
   if (pathname === "/" || pathname === "/home") return null;
 
-  const displayImage = navData.bannerImage || "/vidyasthanam/img/default-banner.jpg";
+  const displayImage = navData.bannerImage || "/img/default-banner.jpg";
 
   return (
     <section className="banner position-relative overflow-hidden">

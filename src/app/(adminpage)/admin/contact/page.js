@@ -39,7 +39,7 @@ export default function MasterContactEditor() {
       setLoading(true);
       try {
         const res = await api.dynamic("/contact");
-        if (res.success) setContactData(res.data);
+        if (res.success && res.data) setContactData(res.data);
       } catch (err) { addToast("Failed to load contact data", "error"); }
       finally { setLoading(false); }
     })();

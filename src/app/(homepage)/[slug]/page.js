@@ -40,7 +40,7 @@ export default function DynamicPage() {
     <div className="inner-page">
       <Banner 
         title={pageData.name} 
-        bgImage={pageData.bannerImage ? (pageData.bannerImage.startsWith("http") ? pageData.bannerImage : `/vidyasthanam/${pageData.bannerImage}`) : "/vidyasthanam/img/canva1.jpg"} 
+        bgImage={pageData.bannerImage ? (pageData.bannerImage.startsWith("http") ? pageData.bannerImage : (process.env.NEXT_PUBLIC_BASE_PATH || "") + (pageData.bannerImage.startsWith("/") ? "" : "/") + pageData.bannerImage) : (process.env.NEXT_PUBLIC_BASE_PATH || "") + "/img/canva1.jpg"} 
         activePage={pageData.name}
       />
 
@@ -54,7 +54,7 @@ export default function DynamicPage() {
                 Please check back soon for updates on our {pageData.name.toLowerCase()} programs and initiatives.
               </p>
               <div className="mt-5">
-                <img src="/vidyasthanam/img/logocanva1.png" alt="Logo" width={80} style={{ opacity: 0.2 }} />
+                <img src={(process.env.NEXT_PUBLIC_BASE_PATH || "") + "/img/logocanva1.png"} alt="Logo" width={80} style={{ opacity: 0.2 }} />
               </div>
             </div>
           </div>

@@ -11,11 +11,11 @@ export async function GET() {
 
     const home = await Home.findOne({}).select("teacher");
 
-    if (!home) {
-      return Response.json(
-        { success: false, message: "Data not found" },
-        { status: 404 },
-      );
+    if (!home || !home.teacher) {
+      return Response.json({
+        success: true,
+        data: { title: "", desc: "", teachers: [], isActive: true },
+      });
     }
 
     return Response.json({ success: true, data: home.teacher });

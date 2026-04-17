@@ -17,9 +17,9 @@ export async function generateMetadata() {
     });
     if (res.success && res.data) {
       return {
-        title: res.data.metaTitle || "Our Courses | Vidyasthanam",
-        description: res.data.metaDescription || "Explore our wide range of professional online courses.",
-        keywords: res.data.metaKeywords || "carnatic music, sanskrit, tamil, french, online courses",
+        title: res.data.metaTitle,
+        description: res.data.metaDescription,
+        keywords: res.data.metaKeywords,
         openGraph: {
           title: res.data.metaTitle,
           description: res.data.metaDescription,

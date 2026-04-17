@@ -67,7 +67,11 @@ const LazyTableImage = React.memo(({ src, alt, height = 60, width = 100 }) => {
       {/* Render <img> only when scrolled into view */}
       {isVisible && src ? (
         <img
-          src={src}
+          src={
+            (src?.startsWith("data:")
+              ? ""
+              : process.env.NEXT_PUBLIC_BASE_PATH || "") + src
+          }
           alt={alt}
           onLoad={() => setLoaded(true)}
           style={{
@@ -718,7 +722,12 @@ export default function SliderPage() {
                 >
                   {tempSlide.image ? (
                     <img
-                      src={tempSlide.image}
+                      src={
+                        (tempSlide.image?.startsWith("data:")
+                          ? ""
+                          : process.env.NEXT_PUBLIC_BASE_PATH || "") +
+                        tempSlide.image
+                      }
                       alt="Slide Preview"
                       style={{
                         width: "100%",

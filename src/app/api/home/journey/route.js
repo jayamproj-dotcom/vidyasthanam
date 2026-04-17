@@ -8,20 +8,12 @@ export async function GET() {
   try {
     await connectToDatabase();
     let home = await Home.findOne({});
-    
-    // Auto-seed if empty
-    if (!home || !home.journey || !home.journey.title) {
-      const defaultJourney = {
-        title: "Begin Your Musical Journey Today!",
-        desc: "Discover the joy of learning with expert guidance in Carnatic, Hindustani, Veena, Vocal, and Instrumental music. Whether you’re a beginner or an advanced learner, our personalized classes will help you unlock your true potential.",
-        isActive: true
-      };
-      
-      home = await Home.findOneAndUpdate(
-        {},
-        { $set: { journey: defaultJourney } },
-        { upsert: true, new: true }
-      );
+
+    if (!home || !home.journey) {
+      return NextResponse.json({
+        success: true,
+        data: { title: "", desc: "", isActive: true }
+      });
     }
 
     return NextResponse.json({ success: true, data: home.journey });

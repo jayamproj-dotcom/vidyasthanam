@@ -73,18 +73,12 @@ const Footer = ({ navData = [], coursesData = [] }) => {
           <div className="col-lg-3 col-md-6 col-sm-12 footer-col">
             <h3 className="footer-title">Our Courses</h3>
             <ul className="footer-links">
-              {activeCourses.length > 0 ? (
+              {(activeCourses.length > 0) && (
                 activeCourses.map((course, idx) => (
                   <li key={idx}>
                     <Link href="/courses">{course.name}</Link>
                   </li>
                 ))
-              ) : (
-                <>
-                  <li><Link href="/courses">Carnatic Music Theory</Link></li>
-                  <li><Link href="/courses">Conversational French</Link></li>
-                  <li><Link href="/courses">Sanskrit</Link></li>
-                </>
               )}
             </ul>
           </div>
