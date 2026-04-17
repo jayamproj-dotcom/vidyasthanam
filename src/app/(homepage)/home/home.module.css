@@ -1,0 +1,52 @@
+.customContainer {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.scrollWrapper {
+  width: 100%;
+  overflow: hidden;
+  padding: 20px 0;
+  position: relative;
+}
+
+.infiniteScroll {
+  display: flex;
+  gap: 30px;
+  width: max-content;
+  animation: marquee 30s linear infinite;
+}
+
+.infiniteScroll:hover {
+  animation-play-state: paused;
+}
+
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  90% { transform: translateX(calc(-50% - 15px)); } /* Scroll to half mark */
+  100% { transform: translateX(calc(-50% - 15px)); } /* Short pause before reset */
+}
+
+/* For mobile responsiveness */
+@media (max-width: 768px) {
+  .infiniteScroll {
+    animation: marquee 20s linear infinite;
+  }
+}
+
+.teacherCardWrapper {
+  width: 350px;
+  flex-shrink: 0;
+}
+
+.courseCardWrapper {
+  width: 380px;
+  flex-shrink: 0;
+}
+
+.eventCardWrapper {
+  width: 450px;
+  flex-shrink: 0;
+}
+
