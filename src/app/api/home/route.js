@@ -1,28 +1,17 @@
-import { connectToDatabase } from "@/lib/mongodb";
-import Home from "@/models/Home";
+import { NextResponse } from "next/server";
+import { getHomeData } from "@/lib/services/dataService";
 
 export async function GET() {
-  try {
-    await connectToDatabase();
-
-    const homeData = await Home.findOne({});
-
-    if (!homeData) {
-      return Response.json({
+  const result = await getHomeData();
+  if (result.success) {
+    if (!result.data) {
+      return NextResponse.json({
         success: false,
         message: "Home data not found",
       });
     }
-
-    return Response.json({
-      success: true,
-      data: homeData,
-    });
-  } catch (error) {
-    console.error("Error fetching home data:", error);
-    return Response.json(
-      { success: false, message: "Internal server error" },
-      { status: 500 },
-    );
+    return NextResponse.json(result);
   }
+  return NextResponse.json(result, { status: 500 });
 }
+

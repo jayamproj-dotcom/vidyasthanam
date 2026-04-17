@@ -1,6 +1,7 @@
 import React from "react";
 import api from "@/lib/api";
 import ContactContent from "./ContactContent";
+import { getContactData } from "@/lib/services/dataService";
 
 /**
  * Server Component for the Contact Page
@@ -9,12 +10,7 @@ import ContactContent from "./ContactContent";
 
 export async function generateMetadata() {
   try {
-    const res = await api.get("/contact", {
-      next: { 
-        revalidate: parseInt(process.env.REVALIDATE) || 60, 
-        tags: ["contact-data"] 
-      }
-    });
+    const res = await getContactData();
     if (res.success && res.data) {
       return {
         title: res.data.metaTitle || "Contact Us | Vidyasthanam",
@@ -37,12 +33,8 @@ export default async function ContactPage() {
   let contactData = null;
 
   try {
-    const res = await api.get("/contact", {
-      next: { 
-        revalidate: parseInt(process.env.REVALIDATE) || 60, 
-        tags: ["contact-data"] 
-      }
-    });
+    const res = await getContactData();
+
 
     if (res.success && res.data) {
       contactData = res.data;

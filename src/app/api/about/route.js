@@ -4,19 +4,14 @@ import { connectToDatabase } from "@/lib/mongodb";
 import About from "@/models/About";
 import { verifyAuth } from "@/lib/auth";
 import { saveBase64Image } from "@/lib/upload";
+import { getAboutData } from "@/lib/services/dataService";
 
 export async function GET() {
-  try {
-    await connectToDatabase();
-    let page = await About.findOne({});
-
-    return NextResponse.json({ success: true, data: page });
-  } catch (error) {
-    return NextResponse.json(
-      { success: false, error: error.message },
-      { status: 500 },
-    );
+  const result = await getAboutData();
+  if (result.success) {
+    return NextResponse.json(result);
   }
+  return NextResponse.json(result, { status: 500 });
 }
 
 export async function PATCH(req) {

@@ -4,21 +4,16 @@ import Event from "@/models/Event";
 import { verifyAuth } from "@/lib/auth";
 import { revalidateTag } from "next/cache";
 
+import { getEventsData } from "@/lib/services/dataService";
+
 export async function GET() {
-  try {
-    await connectToDatabase();
-
-    let doc = await Event.findOne();
-
-    return NextResponse.json({ success: true, data: doc });
-  } catch (err) {
-    console.error("[GET /api/events]", err);
-    return NextResponse.json(
-      { success: false, message: err.message },
-      { status: 500 }
-    );
+  const result = await getEventsData();
+  if (result.success) {
+    return NextResponse.json(result);
   }
+  return NextResponse.json(result, { status: 500 });
 }
+
 
 export async function PUT(request) {
   try {

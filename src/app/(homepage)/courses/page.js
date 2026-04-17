@@ -1,6 +1,7 @@
 import React from "react";
 import api from "@/lib/api";
 import CoursesContent from "./CoursesContent";
+import { getCoursesData } from "@/lib/services/dataService";
 
 /**
  * Server Component for the Courses Page
@@ -9,12 +10,7 @@ import CoursesContent from "./CoursesContent";
 
 export async function generateMetadata() {
   try {
-    const res = await api.get("/courses", {
-      next: { 
-        revalidate: parseInt(process.env.REVALIDATE) || 60, 
-        tags: ["courses-data"] 
-      }
-    });
+    const res = await getCoursesData();
     if (res.success && res.data) {
       return {
         title: res.data.metaTitle,
@@ -39,12 +35,8 @@ export default async function CoursesPage() {
   };
 
   try {
-    const res = await api.get("/courses", {
-      next: { 
-        revalidate: parseInt(process.env.REVALIDATE) || 60, 
-        tags: ["courses-data"] 
-      }
-    });
+    const res = await getCoursesData();
+
 
     if (res.success && res.data) {
       coursesData = res.data;

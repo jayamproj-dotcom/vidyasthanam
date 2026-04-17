@@ -2,6 +2,7 @@ import React from "react";
 import api from "@/lib/api";
 import RegistrationContent from "./RegistrationContent";
 import Banner from "@/components/Banner";
+import { getRegistrationData } from "@/lib/services/dataService";
 
 /**
  * Server Component for the Student Registration Page
@@ -10,12 +11,7 @@ import Banner from "@/components/Banner";
 
 export async function generateMetadata() {
   try {
-    const res = await api.get("/registration", {
-      next: { 
-        revalidate: parseInt(process.env.REVALIDATE) || 60, 
-        tags: ["registration-data"] 
-      }
-    });
+    const res = await getRegistrationData();
     if (res.success && res.data) {
       return {
         title: res.data.metaTitle || "Student Registration | Vidyasthanam",
@@ -40,12 +36,8 @@ export default async function StudentRegistrationPage() {
   };
 
   try {
-    const res = await api.get("/registration", {
-      next: { 
-        revalidate: parseInt(process.env.REVALIDATE) || 60, 
-        tags: ["registration-data"] 
-      }
-    });
+    const res = await getRegistrationData();
+
 
     if (res.success && res.data) {
       registrationData = res.data;

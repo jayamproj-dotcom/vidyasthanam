@@ -2,6 +2,7 @@ import React from "react";
 import api from "@/lib/api";
 import FoundationContent from "./FoundationContent";
 import Banner from "@/components/Banner";
+import { getFoundationData } from "@/lib/services/dataService";
 
 /**
  * Server Component for the Vidyasthanam Foundation Page
@@ -10,12 +11,7 @@ import Banner from "@/components/Banner";
 
 export async function generateMetadata() {
   try {
-    const res = await api.get("/foundation", {
-      next: { 
-        revalidate: parseInt(process.env.REVALIDATE) || 60, 
-        tags: ["foundation-data"] 
-      }
-    });
+    const res = await getFoundationData();
     if (res.success && res.data) {
       return {
         title: res.data.metaTitle || "Vidyasthanam Foundation | Promoting Hindu Heritage",
@@ -40,12 +36,8 @@ export default async function VidyasthanamFoundationPage() {
   };
 
   try {
-    const res = await api.get("/foundation", {
-      next: { 
-        revalidate: parseInt(process.env.REVALIDATE) || 60, 
-        tags: ["foundation-data"] 
-      }
-    });
+    const res = await getFoundationData();
+
 
     if (res.success && res.data) {
       foundationData = res.data;

@@ -4,15 +4,16 @@ import Navbar from "@/models/Navbar";
 import { verifyAuth } from "@/lib/auth";
 import { revalidateTag } from "next/cache";
 
+import { getNavbarData } from "@/lib/services/dataService";
+
 export async function GET() {
-  try {
-    await connectToDatabase();
-    const navItems = await Navbar.find({}).sort({ order: 1 });
-    return NextResponse.json({ success: true, data: navItems });
-  } catch (error) {
-    return NextResponse.json({ success: false, error: error.message }, { status: 500 });
+  const result = await getNavbarData();
+  if (result.success) {
+    return NextResponse.json(result);
   }
+  return NextResponse.json(result, { status: 500 });
 }
+
 
 export async function POST(req) {
   try {

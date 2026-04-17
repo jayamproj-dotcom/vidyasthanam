@@ -4,21 +4,16 @@ import Course from "@/models/Course";
 import { verifyAuth } from "@/lib/auth"; 
 import { revalidatePath } from "next/cache";
 
+import { getCoursesData } from "@/lib/services/dataService";
+
 export async function GET() {
-  try {
-    await connectToDatabase();
-
-    let doc = await Course.findOne();
-
-    return NextResponse.json({ success: true, data: doc });
-  } catch (err) {
-    console.error("[GET /api/courses]", err);
-    return NextResponse.json(
-      { success: false, message: err.message },
-      { status: 500 }
-    );
+  const result = await getCoursesData();
+  if (result.success) {
+    return NextResponse.json(result);
   }
+  return NextResponse.json(result, { status: 500 });
 }
+
 
 export async function PUT(request) {
   try {

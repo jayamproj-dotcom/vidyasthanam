@@ -1,6 +1,7 @@
 import React from "react";
 import api from "@/lib/api";
 import PublicationsContent from "./PublicationsContent";
+import { getPublicationsData } from "@/lib/services/dataService";
 
 /**
  * Server Component for the Publications Page
@@ -9,12 +10,7 @@ import PublicationsContent from "./PublicationsContent";
 
 export async function generateMetadata() {
   try {
-    const res = await api.get("/publications", {
-      next: { 
-        revalidate: parseInt(process.env.REVALIDATE) || 60, 
-        tags: ["publications-data"] 
-      }
-    });
+    const res = await getPublicationsData();
     if (res.success && res.data) {
       return {
         title: res.data.metaTitle || "Publications & Resources | Vidyasthanam",
@@ -40,12 +36,8 @@ export default async function PublicationsPage() {
   };
 
   try {
-    const res = await api.get("/publications", {
-      next: { 
-        revalidate: parseInt(process.env.REVALIDATE) || 60, 
-        tags: ["publications-data"] 
-      }
-    });
+    const res = await getPublicationsData();
+
 
     if (res.success && res.data) {
       publicationsData = res.data;

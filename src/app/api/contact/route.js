@@ -4,21 +4,16 @@ import Contact from "@/models/Contact";
 import { verifyAuth } from "@/lib/auth";
 import { revalidateTag } from "next/cache";
 
-export async function GET() {
-  try {
-    await connectToDatabase();
+import { getContactData } from "@/lib/services/dataService";
 
-    let doc = await Contact.findOne();
-    
-    return NextResponse.json({ success: true, data: doc });
-  } catch (err) {
-    console.error("[GET /api/contact]", err);
-    return NextResponse.json(
-      { success: false, message: err.message },
-      { status: 500 }
-    );
+export async function GET() {
+  const result = await getContactData();
+  if (result.success) {
+    return NextResponse.json(result);
   }
+  return NextResponse.json(result, { status: 500 });
 }
+
 
 export async function PUT(request) {
   try {

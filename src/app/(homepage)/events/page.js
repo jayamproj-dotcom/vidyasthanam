@@ -1,6 +1,7 @@
 import React from "react";
 import api from "@/lib/api";
 import EventsContent from "./EventsContent";
+import { getEventsData } from "@/lib/services/dataService";
 
 /**
  * Server Component for the Events Page
@@ -9,12 +10,7 @@ import EventsContent from "./EventsContent";
 
 export async function generateMetadata() {
   try {
-    const res = await api.get("/events", {
-      next: { 
-        revalidate: parseInt(process.env.REVALIDATE) || 60, 
-        tags: ["events-data"] 
-      }
-    });
+    const res = await getEventsData();
     if (res.success && res.data) {
       // Logic for metadata if available in res.data, otherwise defaults
       return {
@@ -40,12 +36,8 @@ export default async function EventsPage() {
   };
 
   try {
-    const res = await api.get("/events", {
-      next: { 
-        revalidate: parseInt(process.env.REVALIDATE) || 60, 
-        tags: ["events-data"] 
-      }
-    });
+    const res = await getEventsData();
+
 
     if (res.success && res.data) {
       eventsData = res.data;

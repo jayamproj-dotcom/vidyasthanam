@@ -1,36 +1,141 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 📘 Vidyasthanam - Next.js Project
 
-## Getting Started
+## 🚀 Project Overview
 
-First, run the development server:
+Vidyasthanam is a Next.js-based web application deployed under a sub-path with MongoDB as the database. It supports ISR (Incremental Static Regeneration), authentication, and dynamic content rendering.
+
+---
+
+## ⚙️ Configuration
+
+### Next.js Config (`next.config.js`)
+
+```js
+const nextConfig = {
+  basePath: '/vidyasthanam',
+  assetPrefix: '/vidyasthanam/',
+  images: {
+    qualities: [25, 50, 75, 85, 100],
+  },
+}
+
+export default nextConfig;
+```
+
+### 📌 Explanation
+
+* `basePath` → Runs app under `/vidyasthanam`
+* `assetPrefix` → Ensures static files load correctly in subdirectory
+* `images.qualities` → Controls image optimization levels
+
+---
+
+## 🔐 Environment Variables (`.env`)
+
+```env
+# Local MongoDB
+# MONGODB_URI=mongodb://127.0.0.1:27017/vidyasthanam
+
+# Production MongoDB
+MONGODB_URI=mongodb://admin:AdminStrongPass123@76.13.244.61:27017/vidyasthanam?authSource=admin
+
+# MongoDB Atlas (Optional)
+# MONGODB_URI=mongodb+srv://<user>:<password>@cluster.mongodb.net/vidyasthanam
+
+NEXT_PUBLIC_BASE_PATH=/vidyasthanam
+JWT_SECRET=vidyasthanam_admin_secret_2024
+DOMIN_URL=http://localhost:3000
+
+# ISR Revalidation Time (in seconds)
+REVALIDATE=60
+```
+
+---
+
+## 🛠️ Installation
+
+```bash
+npm install
+```
+
+---
+
+## ▶️ Run Locally
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+App will run at:
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+```
+http://localhost:3000/vidyasthanam
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+## 📦 Build for Production
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+npm run build
+npm start
+```
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 🔄 ISR (Incremental Static Regeneration)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+* Controlled using:
 
-## Deploy on Vercel
+```env
+REVALIDATE=60
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+* Pages will revalidate every **60 seconds**
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+
+## 🔑 Authentication
+
+* Uses JWT for authentication
+* Secret key:
+
+```env
+JWT_SECRET=vidyasthanam_admin_secret_2024
+```
+
+⚠️ Change this in production for security
+
+---
+
+## 📁 Project Structure (Simplified)
+
+```
+src/
+ ├── app/
+ ├── components/
+ ├── lib/
+ ├── models/
+ ├── api/
+public/
+```
+
+---
+
+## ⚠️ Best Practices
+
+* ❌ Do NOT commit `.env` file
+* ❌ Avoid uploading `.zip` files to Git
+* ✅ Use `.gitignore`
+* ✅ Use environment-based configs
+
+---
+
+## 🧑‍💻 Author
+
+Developed by **Sridhar**
+
+---
+
+## 📄 License
+
+This project is for internal / client use.

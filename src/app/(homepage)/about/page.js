@@ -1,6 +1,7 @@
 import React from "react";
 import api from "@/lib/api";
 import AboutContent from "./AboutContent";
+import { getAboutData } from "@/lib/services/dataService";
 
 /**
  * Server Component for the About Page
@@ -9,12 +10,8 @@ import AboutContent from "./AboutContent";
 
 export async function generateMetadata() {
   try {
-    const res = await api.get("/about", {
-      next: { 
-        revalidate: parseInt(process.env.REVALIDATE) || 60, 
-        tags: ["about-data"] 
-      }
-    });
+    const res = await getAboutData();
+
     if (res.success && res.data) {
       return {
         title: res.data.metaTitle || "About Us | Vidyasthanam",
@@ -42,12 +39,8 @@ export default async function AboutPage() {
   };
 
   try {
-    const res = await api.get("/about", {
-      next: { 
-        revalidate: parseInt(process.env.REVALIDATE) || 60, 
-        tags: ["about-data"] 
-      }
-    });
+    const res = await getAboutData();
+
 
     if (res.success && res.data) {
       aboutData = res.data;

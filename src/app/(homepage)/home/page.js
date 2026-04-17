@@ -1,6 +1,7 @@
 import React from "react";
 import api from "@/lib/api";
 import HomeContent from "./HomeContent";
+import { getHomeData } from "@/lib/services/dataService";
 
 /**
  * Server Component for the Homepage
@@ -9,12 +10,8 @@ import HomeContent from "./HomeContent";
 
 export async function generateMetadata() {
   try {
-    const res = await api.get("/home", {
-      next: {
-        revalidate: parseInt(process.env.REVALIDATE) || 60,
-        tags: ["home-data"]
-      }
-    });
+    const res = await getHomeData();
+
     if (res.success && res.data) {
       return {
         title: res.data.title || "Vidyasthanam - School of Indian Music, Culture & Languages",
@@ -45,13 +42,9 @@ export default async function HomePage() {
   };
 
   try {
-    // ✅ Server-side Fetch with ISR and Tagged Cache for instant revalidation
-    const res = await api.get("/home", {
-      next: {
-        revalidate: parseInt(process.env.REVALIDATE),
-        tags: ["home-data"]
-      }
-    });
+    // ✅ Server-side data fetching directly from DB during build
+    const res = await getHomeData();
+
     if (res.success && res.data) {
       homeData = res.data;
     }

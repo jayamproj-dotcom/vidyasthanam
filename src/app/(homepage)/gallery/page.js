@@ -2,6 +2,7 @@ import React from "react";
 import api from "@/lib/api";
 import GalleryContent from "./GalleryContent";
 import Banner from "@/components/Banner";
+import { getGalleryData } from "@/lib/services/dataService";
 
 /**
  * Server Component for the Gallery Page
@@ -10,12 +11,7 @@ import Banner from "@/components/Banner";
 
 export async function generateMetadata() {
   try {
-    const res = await api.get("/gallery", {
-      next: { 
-        revalidate: parseInt(process.env.REVALIDATE) || 60, 
-        tags: ["gallery-data"] 
-      }
-    });
+    const res = await getGalleryData();
     if (res.success && res.data) {
       return {
         title: res.data.metaTitle || "Photo Gallery | Vidyasthanam",
@@ -41,12 +37,8 @@ export default async function GalleryPage() {
   };
 
   try {
-    const res = await api.get("/gallery", {
-      next: { 
-        revalidate: parseInt(process.env.REVALIDATE) || 60, 
-        tags: ["gallery-data"] 
-      }
-    });
+    const res = await getGalleryData();
+
 
     if (res.success && res.data) {
       galleryData = res.data;
