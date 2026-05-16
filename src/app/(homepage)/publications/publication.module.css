@@ -1,0 +1,21 @@
+.category-btn {
+    border-radius: 30px !important;
+    font-weight: 500;
+    font-size: 1.1rem;
+    min-width: 160px;
+    border: 2px solid transparent;
+    background: #f8f9fa;
+    padding: 12px 0;
+    transition: all 0.3s ease;
+}
+
+
+.category-btn.active,
+.category-btn:hover {
+    background: var(--light-orange);
+    color: #fff;
+}
+
+.category-btn:hover {
+    background-color: #e0e0e0;
+}

@@ -1,0 +1,12 @@
+Options -Indexes
+
+RewriteEngine On
+
+# Keep uploads folder directly accessible
+RewriteCond %{REQUEST_URI} !^/uploads/
+
+# Proxy all requests to Next.js app
+RewriteRule ^(.*)$ http://127.0.0.1:3009/$1 [P,L]
+
+# Preserve host headers
+ProxyPreserveHost On

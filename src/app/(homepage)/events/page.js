@@ -1,0 +1,69 @@
+import React from "react";
+import api from "@/lib/api";
+import EventsContent from "./EventsContent";
+import { getEventsData } from "@/lib/services/dataService";
+
+/**
+ * Server Component for the Events Page
+ * Handles high-performance data fetching with ISR and dynamic metadata.
+ */
+
+export async function generateMetadata() {
+  try {
+    const res = await getEventsData();
+    if (res.success && res.data) {
+      const { metaTitle, metaDescription, metaKeywords } = res.data;
+      return {
+        title: metaTitle || "Events & Performances | Vidyasthanam",
+        description: metaDescription || "View latest performances and school events.",
+        keywords: metaKeywords || "Vidyasthanam, Events, Carnatic Music",
+        openGraph: {
+          title: metaTitle,
+          description: metaDescription,
+          url: "/events",
+          images: ["/logocanva1.png"],
+        },
+        twitter: {
+          card: "summary_large_image",
+          title: metaTitle,
+          description: metaDescription,
+          images: ["/logocanva1.png"],
+        },
+      };
+    }
+  } catch (err) {
+    console.error("Events metadata generation error:", err);
+  }
+  return { title: "Events & Performances | Vidyasthanam" };
+}
+
+
+export default async function EventsPage() {
+  let eventsData = {
+    events: []
+  };
+
+  try {
+    const res = await getEventsData();
+
+
+    if (res.success && res.data) {
+      eventsData = res.data;
+    }
+  } catch (err) {
+    console.error("Failed to fetch events data on server:", err);
+  }
+
+  return (
+    <>
+      <div id="loader">
+        <div className="three-body">
+          <div className="three-body__dot"></div>
+          <div className="three-body__dot"></div>
+          <div className="three-body__dot"></div>
+        </div>
+      </div>
+      <EventsContent initialData={eventsData} />
+    </>
+  );
+}
