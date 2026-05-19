@@ -19,7 +19,14 @@ export default function AdminLoginPage() {
 
   useEffect(() => {
     setMounted(true);
-  }, []);
+    const params = new URLSearchParams(window.location.search);
+    const msg = params.get("message");
+    if (msg) {
+      addToast(msg, "error");
+      const newUrl = window.location.pathname;
+      window.history.replaceState({}, document.title, newUrl);
+    }
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -27,7 +34,7 @@ export default function AdminLoginPage() {
 
     try {
       // ✅ Using the newly formatted api wrapper
-      const data = await api.post("/admin/login", { email, password });
+      const data = await api.post("/admin/login", { email: email.trim(), password: password.trim() });
 
       if (data.success) {
         addToast("Login successful! Redirecting...", "success");

@@ -35,6 +35,7 @@ export async function PATCH(req) {
 
     const salt = await bcrypt.genSalt(10);
     admin.password = await bcrypt.hash(newPassword, salt);
+    admin.tokenVersion = (admin.tokenVersion || 0) + 1;
     await admin.save();
 
     return Response.json({ success: true, message: "Password updated successfully" });

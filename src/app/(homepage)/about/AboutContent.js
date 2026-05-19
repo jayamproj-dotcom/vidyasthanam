@@ -5,6 +5,100 @@ import Image from "next/image";
 import Banner from "@/components/Banner";
 import api from "@/lib/api";
 
+// ─────────────────────────────────────────────
+// Custom Hook: Intersection Observer
+// ─────────────────────────────────────────────
+const useIntersectionObserver = (options = {}) => {
+  const [isVisible, setIsVisible] = useState(false);
+  const ref = React.useRef(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.1, ...options }
+    );
+
+    if (ref.current) observer.observe(ref.current);
+    return () => observer.disconnect();
+  }, []);
+
+  return [ref, isVisible];
+};
+
+// ─────────────────────────────────────────────
+// Lazy Image Component
+// ─────────────────────────────────────────────
+const LazyBannerImage = React.memo(({ src, alt, className, style, onClick }) => {
+  const [ref, isVisible] = useIntersectionObserver();
+  const [loaded, setLoaded] = useState(false);
+
+  return (
+    <div
+      ref={ref}
+      onClick={onClick}
+      style={{
+        width: "100%",
+        height: "100%",
+        overflow: "hidden",
+        background: "#f0f0f0",
+        position: "relative",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        ...style,
+      }}
+    >
+      <style>{`
+        @keyframes lazyShimmer {
+          0%   { background-position: 200% 0; }
+          100% { background-position: -200% 0; }
+        }
+      `}</style>
+
+      {/* Shimmer */}
+      {!loaded && (
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            background:
+              "linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%)",
+            backgroundSize: "200% 100%",
+            animation: "lazyShimmer 1.2s infinite",
+            zIndex: 1
+          }}
+        />
+      )}
+
+      {/* Render <img> only when scrolled into view */}
+      {isVisible && src ? (
+        <img
+          src={src}
+          alt={alt}
+          className={className}
+          onLoad={() => setLoaded(true)}
+          style={{
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
+            opacity: loaded ? 1 : 0,
+            transition: "opacity 0.6s ease-in-out",
+            display: "block",
+          }}
+        />
+      ) : !src ? (
+        <i className="fas fa-image" style={{ color: "#ccc", fontSize: "40px" }} />
+      ) : null}
+    </div>
+  );
+});
+LazyBannerImage.displayName = "LazyBannerImage";
+
 export default function AboutContent({ initialData }) {
   const [data, setData] = useState(
     initialData || {
@@ -112,20 +206,13 @@ export default function AboutContent({ initialData }) {
               >
                 <div className="col-md-6 mb-4 mb-md-0">
                   {section.images?.[0] && (
-                    <Image
-                      src={(process.env.NEXT_PUBLIC_BASE_PATH || "") + section.images[0]}
-                      alt={section.title || "About Section Image"}
-                      className="img-fluid rounded shadow"
-                      width={630}
-                      height={522}
-                      unoptimized
-                      sizes="(max-width: 768px) 100vw, 388px"
-                      style={{
-                        objectFit: "cover",
-                        width: "100%",
-                        height: "auto",
-                      }}
-                    />
+                    <div className="img-fluid rounded shadow overflow-hidden mx-auto" style={{ width: "100%", aspectRatio: "1.2" }}>
+                      <LazyBannerImage
+                        src={(process.env.NEXT_PUBLIC_BASE_PATH || "") + section.images[0]}
+                        alt={section.title || "About Section Image"}
+                        style={{ objectFit: "cover", width: "100%", height: "100%" }}
+                      />
+                    </div>
                   )}
                 </div>
                 <div className="col-md-6">
@@ -210,15 +297,11 @@ export default function AboutContent({ initialData }) {
                       onClick={() => openLightbox(index)}
                       style={{ cursor: "pointer" }}
                     >
-                      <Image
+                      <LazyBannerImage
                         src={(process.env.NEXT_PUBLIC_BASE_PATH || "") + item.src}
                         alt={item.alt || ""}
                         className="gallery-img"
-                        width={400}
-                        height={300}
-                        unoptimized
-                        sizes="(max-width: 480px) 100vw, (max-width: 768px) 50vw, 33vw"
-                        style={{ objectFit: "cover" }}
+                        style={{ objectFit: "cover", width: "100%", height: "300px" }}
                       />
                       <div className="gallery-overlay">
                         <div className="gallery-caption">
@@ -243,16 +326,15 @@ export default function AboutContent({ initialData }) {
             <span className="lightbox-close" onClick={closeLightbox}>
               <i className="fas fa-times"></i>
             </span>
-            <Image
-              key={(process.env.NEXT_PUBLIC_BASE_PATH || "") + lightbox.currentImg}
-              src={(process.env.NEXT_PUBLIC_BASE_PATH || "") + lightbox.currentImg}
-              alt={lightbox.currentCaption}
-              className="lightbox-img"
-              width={1000}
-              height={800}
-              unoptimized
-              style={{ objectFit: "contain" }}
-            />
+            <div style={{ width: "100%", height: "80vh", maxHeight: "800px" }}>
+              <LazyBannerImage
+                key={(process.env.NEXT_PUBLIC_BASE_PATH || "") + lightbox.currentImg}
+                src={(process.env.NEXT_PUBLIC_BASE_PATH || "") + lightbox.currentImg}
+                alt={lightbox.currentCaption}
+                className="lightbox-img"
+                style={{ objectFit: "contain", width: "100%", height: "100%" }}
+              />
+            </div>
             <div className="lightbox-caption">{lightbox.currentCaption}</div>
           </div>
           <span className="lightbox-control lightbox-prev" onClick={prevImg}>

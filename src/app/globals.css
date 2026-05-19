@@ -1280,7 +1280,7 @@ a {
 }
 
 .event-card:hover .event-img img {
-    transform: scale(1.1);
+    transform: none;
 }
 
 .event-date {

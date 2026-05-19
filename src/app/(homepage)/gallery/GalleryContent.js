@@ -5,6 +5,100 @@ import Image from "next/image";
 import Banner from "@/components/Banner";
 import api from "@/lib/api";
 
+// ─────────────────────────────────────────────
+// Custom Hook: Intersection Observer
+// ─────────────────────────────────────────────
+const useIntersectionObserver = (options = {}) => {
+  const [isVisible, setIsVisible] = useState(false);
+  const ref = React.useRef(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.1, ...options }
+    );
+
+    if (ref.current) observer.observe(ref.current);
+    return () => observer.disconnect();
+  }, []);
+
+  return [ref, isVisible];
+};
+
+// ─────────────────────────────────────────────
+// Lazy Image Component
+// ─────────────────────────────────────────────
+const LazyBannerImage = React.memo(({ src, alt, className, style, onClick }) => {
+  const [ref, isVisible] = useIntersectionObserver();
+  const [loaded, setLoaded] = useState(false);
+
+  return (
+    <div
+      ref={ref}
+      onClick={onClick}
+      style={{
+        width: "100%",
+        height: "100%",
+        overflow: "hidden",
+        background: "#f0f0f0",
+        position: "relative",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
+      <style>{`
+        @keyframes lazyShimmer {
+          0%   { background-position: 200% 0; }
+          100% { background-position: -200% 0; }
+        }
+      `}</style>
+
+      {/* Shimmer */}
+      {!loaded && (
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            background:
+              "linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%)",
+            backgroundSize: "200% 100%",
+            animation: "lazyShimmer 1.2s infinite",
+            zIndex: 1
+          }}
+        />
+      )}
+
+      {/* Render <img> only when scrolled into view */}
+      {isVisible && src ? (
+        <img
+          src={src}
+          alt={alt}
+          className={className}
+          onLoad={() => setLoaded(true)}
+          style={{
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
+            opacity: loaded ? 1 : 0,
+            transition: "opacity 0.6s ease-in-out",
+            display: "block",
+            ...style,
+          }}
+        />
+      ) : !src ? (
+        <i className="fas fa-image" style={{ color: "#ccc", fontSize: "40px" }} />
+      ) : null}
+    </div>
+  );
+});
+LazyBannerImage.displayName = "LazyBannerImage";
+
 export default function GalleryContent({ initialData }) {
   const [data, setData] = useState(initialData || { images: [] });
   const [loading, setLoading] = useState(!initialData);
@@ -94,13 +188,9 @@ export default function GalleryContent({ initialData }) {
                   className="grid-item"
                   onClick={() => openSlider(idx)}
                 >
-                  <Image
+                  <LazyBannerImage
                     src={(process.env.NEXT_PUBLIC_BASE_PATH || "") + img.src}
                     alt={img.alt || "Gallery Image"}
-                    width={400}
-                    height={300}
-                    unoptimized
-                    priority={idx < 4}
                     style={{ objectFit: "cover" }}
                   />
                 </div>
@@ -128,14 +218,11 @@ export default function GalleryContent({ initialData }) {
               <i className="fas fa-chevron-left"></i>
             </button>
             <div className="slider-frame">
-              <Image
+              <LazyBannerImage
                 key={(process.env.NEXT_PUBLIC_BASE_PATH || "") + images[currentIndex].src}
                 className="slider-main-img"
                 src={(process.env.NEXT_PUBLIC_BASE_PATH || "") + images[currentIndex].src}
                 alt="zoom"
-                width={1200}
-                height={800}
-                unoptimized
                 style={{ objectFit: "contain" }}
               />
             </div>
