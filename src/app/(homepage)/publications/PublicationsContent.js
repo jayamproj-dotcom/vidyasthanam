@@ -1,14 +1,12 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import Banner from "@/components/Banner";
 import styles from "./publication.module.css";
 import api from "@/lib/api";
 
 export default function PublicationsContent({ initialData }) {
   const [activeCategory, setActiveCategory] = useState("publications");
-  const [selectedPdf, setSelectedPdf] = useState("");
-  const viewerRef = useRef(null);
 
   const [data, setData] = useState(() => {
     const raw = initialData || { publications: [], resources: [] };
@@ -51,22 +49,6 @@ export default function PublicationsContent({ initialData }) {
     }
   }, [initialData]);
 
-  useEffect(() => {
-    // Load first PDF as default when category changes
-    if (currentList.length > 0) {
-      setSelectedPdf(currentList[0].path);
-    } else {
-      setSelectedPdf("");
-    }
-  }, [activeCategory, currentList.length]);
-
-  const handlePdfSelect = (path) => {
-    setSelectedPdf(path);
-    if (window.innerWidth <= 991 && viewerRef.current) {
-      viewerRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
-    }
-  };
-
   return (
     <div className="inner-page">
       <Banner />
@@ -93,12 +75,12 @@ export default function PublicationsContent({ initialData }) {
             </button>
           </div>
 
-          <div className="row split-view-row">
-            {/* Left Side: List (40%) */}
-            <div className="col-lg-5 col-md-12 mb-4 mb-lg-0">
-              <div className="publications-content-wrapper position-relative split-panel">
+          <div className="row">
+            {/* Full Width List Panel */}
+            <div className="col-12">
+              <div className="publications-content-wrapper position-relative">
                 <div className="course-category active">
-                  <div className="card shadow-sm border-0 rounded-4 p-4 list-scroll bg-white">
+                  <div className="card shadow-sm border rounded-4 p-4 list-scroll bg-white">
                     <h4 className="mb-4 text-orange border-bottom pb-2">
                       <i
                         className={`fas ${activeCategory === "publications" ? "fa-book-open" : "fa-folder-open"} me-2`}
@@ -111,50 +93,35 @@ export default function PublicationsContent({ initialData }) {
                       </span>
                     </h4>
                     <div 
-                      className="d-flex flex-column gap-3"
+                      className="list-scroll"
                       style={{ maxHeight: "600px", overflowY: "auto", paddingRight: "8px" }}
                     >
-                      {currentList.length === 0 && !loading && (
-                        <p className="text-muted text-center py-4">No documents available in this category.</p>
-                      )}
-                      {currentList.map((doc, index) => (
-                        <div
-                          key={index}
-                          className={`d-flex align-items-center p-3 rounded text-decoration-none shadow-sm pdf-link-item ${selectedPdf === doc.path ? "active-pdf" : "bg-light"}`}
-                          onClick={() => handlePdfSelect(doc.path)}
-                          style={{ cursor: "pointer" }}
-                        >
-                          <i className="fas fa-file-pdf fa-2x text-orange me-3"></i>
-                          <span className="text-dark fw-medium lh-sm">
-                            {doc.name}
-                          </span>
-                        </div>
-                      ))}
+                      <div className="row g-3">
+                        {currentList.length === 0 && !loading && (
+                          <div className="col-12">
+                            <p className="text-muted text-center py-4">No documents available in this category.</p>
+                          </div>
+                        )}
+                        {currentList.map((doc, index) => (
+                          <div key={index} className="col-lg-4 col-md-6 col-12">
+                            <a
+                              href={(process.env.NEXT_PUBLIC_BASE_PATH || "") + doc.path}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="d-flex align-items-center p-3 rounded text-decoration-none shadow-sm pdf-link-item bg-light h-100"
+                            >
+                              <i className="fas fa-file-pdf fa-2x text-orange me-3"></i>
+                              <span className="text-dark fw-medium lh-sm">
+                                {doc.name}
+                              </span>
+                              <i className="fas fa-external-link-alt ms-auto text-muted small"></i>
+                            </a>
+                          </div>
+                        ))}
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            </div>
-
-            {/* Right Side: Viewer (60%) */}
-            <div className="col-lg-7 col-md-12" ref={viewerRef}>
-              <div className="card shadow-sm border-0 rounded-4 p-2 position-relative bg-light split-panel">
-                {!selectedPdf && (
-                  <div
-                    className="d-flex flex-column justify-content-center align-items-center h-100 w-100 position-absolute bg-white"
-                    style={{ top: 0, left: 0, zIndex: 5, borderRadius: "1rem" }}
-                  >
-                    <i className="fas fa-file-pdf fa-4x text-muted mb-3 opacity-50"></i>
-                    <h5 className="text-muted">
-                      Select a document from the left to view it here
-                    </h5>
-                  </div>
-                )}
-                <iframe
-                  src={(process.env.NEXT_PUBLIC_BASE_PATH || "") + selectedPdf || "about:blank"}
-                  className="w-100 border-0 rounded-3 h-100"
-                  title="PDF Viewer"
-                ></iframe>
               </div>
             </div>
           </div>
