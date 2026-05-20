@@ -120,6 +120,43 @@ const Toast = ({ message, type, onClose }) => {
   );
 };
 
+const compressImage = (file, maxWidth = 1920, maxHeight = 1920, quality = 0.8) => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = (event) => {
+      const img = new Image();
+      img.src = event.target.result;
+      img.onload = () => {
+        let width = img.width;
+        let height = img.height;
+
+        if (width > maxWidth || height > maxHeight) {
+          if (width > height) {
+            height = Math.round((height * maxWidth) / width);
+            width = maxWidth;
+          } else {
+            width = Math.round((width * maxHeight) / height);
+            height = maxHeight;
+          }
+        }
+
+        const canvas = document.createElement("canvas");
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext("2d");
+        ctx.drawImage(img, 0, 0, width, height);
+
+        // Compress and convert to base64 jpeg
+        const dataUrl = canvas.toDataURL("image/jpeg", quality);
+        resolve(dataUrl);
+      };
+      img.onerror = (err) => reject(err);
+    };
+    reader.onerror = (err) => reject(err);
+  });
+};
+
 // ─────────────────────────────────────────────
 // 4. Main Component
 // ─────────────────────────────────────────────
@@ -284,14 +321,21 @@ export default function MasterGalleryEditor() {
     }
   };
 
-  const handleImageUpload = (e) => {
+  const handleImageUpload = async (e) => {
     const file = e.target.files[0];
     if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setTempImg((prev) => ({ ...prev, src: reader.result }));
-      };
-      reader.readAsDataURL(file);
+      try {
+        // Compress the image client-side to keep payloads small and prevent JSON truncation
+        const compressedBase64 = await compressImage(file, 1600, 1600, 0.75);
+        setTempImg((prev) => ({ ...prev, src: compressedBase64 }));
+      } catch (error) {
+        console.error("Compression failed, using original file:", error);
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          setTempImg((prev) => ({ ...prev, src: reader.result }));
+        };
+        reader.readAsDataURL(file);
+      }
     }
   };
 

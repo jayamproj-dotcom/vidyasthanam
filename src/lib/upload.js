@@ -1,6 +1,7 @@
 import fs from "fs";
 import path from "path";
 import crypto from "crypto";
+import sharp from "sharp";
 
 export const saveBase64Image = async (base64String, folder = "uploads") => {
   try {
@@ -9,11 +10,12 @@ export const saveBase64Image = async (base64String, folder = "uploads") => {
       return base64String;
     }
 
-    const type = base64String.split(";")[0].split("/")[1];
     const base64Data = base64String.replace(/^data:image\/\w+;base64,/, "");
     const buffer = Buffer.from(base64Data, "base64");
 
-    const fileName = `${crypto.randomUUID()}.${type}`;
+    // Use a content hash (SHA-256) of the buffer to prevent duplicate storage
+    const hash = crypto.createHash("sha256").update(buffer).digest("hex");
+    const fileName = `${hash}.webp`;
     const uploadDir = path.join(process.cwd(), "public", folder);
 
     if (!fs.existsSync(uploadDir)) {
@@ -21,7 +23,13 @@ export const saveBase64Image = async (base64String, folder = "uploads") => {
     }
 
     const filePath = path.join(uploadDir, fileName);
-    fs.writeFileSync(filePath, buffer);
+    
+    // Convert the image buffer to WebP and save it only if it doesn't exist
+    if (!fs.existsSync(filePath)) {
+      await sharp(buffer)
+        .webp({ quality: 80 })
+        .toFile(filePath);
+    }
 
     // Return the public URL directly
     return `/${folder}/${fileName}`;

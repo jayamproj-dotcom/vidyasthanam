@@ -51,6 +51,10 @@ export const metadata = {
   description: "Learn Carnatic, Hindustani, Veena, Vocal, and Languages at Vidyasthanam, Chennai.",
   keywords: ["Indian Music", "Culture", "Languages", "Carnatic Music", "Hindustani Music", "Vocal Training", "Veena", "Sanskrit", "Tamil", "Chennai"],
   authors: [{ name: "Vidyasthanam" }],
+  robots: {
+    index: false,
+    follow: false,
+  },
   openGraph: {
     type: "website",
     locale: "en_IN",

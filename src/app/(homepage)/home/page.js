@@ -18,6 +18,10 @@ export async function generateMetadata() {
         title: title || "Vidyasthanam - School of Indian Music, Culture & Languages",
         description: description || "Learn Carnatic, Hindustani, Veena, Vocal, and Languages.",
         keywords: keywords || "Music, Veena, Sanskrit, Tamil, Hindi, French, Chennai",
+        robots: {
+          index: false,
+          follow: false,
+        },
         openGraph: {
           title: title,
           description: description,
@@ -43,7 +47,13 @@ export async function generateMetadata() {
   } catch (err) {
     console.error("Home metadata generation error:", err);
   }
-  return { title: "Vidyasthanam - School of Indian Music, Culture & Languages" };
+  return {
+    title: "Vidyasthanam - School of Indian Music, Culture & Languages",
+    robots: {
+      index: false,
+      follow: false,
+    },
+  };
 }
 
 

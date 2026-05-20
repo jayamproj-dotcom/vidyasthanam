@@ -14,108 +14,6 @@ const getInitials = (name) => {
   return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
 };
 
-// ─────────────────────────────────────────────
-// Custom Hook: Intersection Observer
-// ─────────────────────────────────────────────
-const useIntersectionObserver = (options = {}) => {
-  const [isVisible, setIsVisible] = useState(false);
-  const ref = React.useRef(null);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-          observer.disconnect();
-        }
-      },
-      { threshold: 0.1, ...options }
-    );
-
-    if (ref.current) observer.observe(ref.current);
-    return () => observer.disconnect();
-  }, []);
-
-  return [ref, isVisible];
-};
-
-// ─────────────────────────────────────────────
-// Lazy Image Component
-// ─────────────────────────────────────────────
-const LazyBannerImage = React.memo(({ src, alt, className, style, onClick }) => {
-  const [ref, isVisible] = useIntersectionObserver();
-  const [loaded, setLoaded] = useState(false);
-
-  return (
-    <div
-      ref={ref}
-      onClick={onClick}
-      style={{
-        width: "100%",
-        height: "100%",
-        overflow: "hidden",
-        background: "#f0f0f0",
-        position: "relative",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        ...style,
-      }}
-    >
-      <style>{`
-        @keyframes lazyShimmer {
-          0%   { background-position: 200% 0; }
-          100% { background-position: -200% 0; }
-        }
-      `}</style>
-
-      {/* Shimmer */}
-      {!loaded && (
-        <div
-          style={{
-            position: "absolute",
-            inset: 0,
-            background:
-              "linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%)",
-            backgroundSize: "200% 100%",
-            animation: "lazyShimmer 1.2s infinite",
-            zIndex: 1
-          }}
-        />
-      )}
-
-      {/* Render <img> only when scrolled into view */}
-      {isVisible && src ? (
-        <img
-          src={src}
-          alt={alt}
-          className={className}
-          onLoad={() => setLoaded(true)}
-          style={{
-            width: "100%",
-            height: "100%",
-            objectFit: "cover",
-            opacity: loaded ? 1 : 0,
-            transition: "opacity 0.6s ease-in-out",
-            display: "block",
-          }}
-        />
-      ) : !src ? (
-        <i className="fas fa-image" style={{ color: "#ccc", fontSize: "40px" }} />
-      ) : null}
-    </div>
-  );
-});
-LazyBannerImage.displayName = "LazyBannerImage";
-
-// Helper to extract YouTube video ID from URL
-function getYouTubeId(url) {
-  if (!url) return null;
-  const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
-  const match = url.match(regExp);
-  return (match && match[2].length === 11) ? match[2] : null;
-}
-
 // --- Dynamic Interactivity Sections ---
 
 const TeachersSection = dynamic(
@@ -148,12 +46,13 @@ const TeachersSection = dynamic(
                             (teacher.avatar.startsWith("/") ||
                               teacher.avatar.startsWith("http") ||
                               teacher.avatar.startsWith("data:")) ? (
-                              <LazyBannerImage
+                              <img
                                 src={(process.env.NEXT_PUBLIC_BASE_PATH || "") + teacher.avatar}
                                 alt={teacher.name}
                                 style={{
                                   width: "100%",
                                   height: "100%",
+                                  objectFit: "cover",
                                 }}
                               />
                             ) : (
@@ -182,12 +81,13 @@ const TeachersSection = dynamic(
                           (teacher.avatar.startsWith("/") ||
                             teacher.avatar.startsWith("http") ||
                             teacher.avatar.startsWith("data:")) ? (
-                            <LazyBannerImage
+                            <img
                               src={(process.env.NEXT_PUBLIC_BASE_PATH || "") + teacher.avatar}
                               alt={teacher.name}
                               style={{
                                 width: "100%",
                                 height: "100%",
+                                objectFit: "cover",
                               }}
                             />
                           ) : (
@@ -230,7 +130,6 @@ const FoundationSection = ({ home }) => (
           className="vf-featured-image vf-image"
           width={400}
           height={400}
-          unoptimized
           style={{ objectFit: "contain" }}
         />
       )}
@@ -273,18 +172,18 @@ const CoursesSection = dynamic(
                   {displayCourses.map((course, index) => (
                     <div key={index} className={styles.courseCardWrapper}>
                       <div className="course-card-icon text-center p-5 h-100">
-                        <div className="course-icon mb-4" style={{ display: "inline-flex", justifyContent: "center", alignItems: "center" }}>
+                        <div className="course-icon mb-4">
                           {course.bgImage ? (
-                            <div style={{ width: "80px", height: "80px", overflow: "hidden", borderRadius: "15px" }}>
-                              <LazyBannerImage
-                                src={(process.env.NEXT_PUBLIC_BASE_PATH || "") + course.bgImage}
-                                alt={course.name}
-                                style={{
-                                  width: "100%",
-                                  height: "100%",
-                                }}
-                              />
-                            </div>
+                            <img
+                              src={(process.env.NEXT_PUBLIC_BASE_PATH || "") + course.bgImage}
+                              alt={course.name}
+                              style={{
+                                width: "80px",
+                                height: "80px",
+                                objectFit: "cover",
+                                borderRadius: "15px",
+                              }}
+                            />
                           ) : (
                             <i
                               className={`${course.icon || "fas fa-music"} fa-4x text-orange`}
@@ -313,18 +212,18 @@ const CoursesSection = dynamic(
                 {activeCourses.map((course, index) => (
                   <div key={index} className="col-lg-4 col-md-6 mb-4">
                     <div className="course-card-icon text-center p-5 h-100">
-                      <div className="course-icon mb-4" style={{ display: "inline-flex", justifyContent: "center", alignItems: "center" }}>
+                      <div className="course-icon mb-4">
                         {course.bgImage ? (
-                          <div style={{ width: "80px", height: "80px", overflow: "hidden", borderRadius: "15px" }}>
-                            <LazyBannerImage
-                              src={(process.env.NEXT_PUBLIC_BASE_PATH || "") + course.bgImage}
-                              alt={course.name}
-                              style={{
-                                width: "100%",
-                                height: "100%",
-                              }}
-                            />
-                          </div>
+                          <img
+                            src={(process.env.NEXT_PUBLIC_BASE_PATH || "") + course.bgImage}
+                            alt={course.name}
+                            style={{
+                              width: "80px",
+                              height: "80px",
+                              objectFit: "cover",
+                              borderRadius: "15px",
+                            }}
+                          />
                         ) : (
                           <i
                             className={`${course.icon || "fas fa-music"} fa-4x text-orange`}
@@ -370,8 +269,6 @@ const EventsSection = dynamic(
         ? [...activeVideos, ...activeVideos]
         : activeVideos;
 
-      const [playingVideos, setPlayingVideos] = useState({});
-
       return (
         <section id="events" className="events-section py-5">
           <div className={styles.customContainer}>
@@ -383,153 +280,22 @@ const EventsSection = dynamic(
             {isScrollable ? (
               <div className={styles.scrollWrapper}>
                 <div className={styles.infiniteScroll}>
-                  {displayVideos.map((video, index) => {
-                    const videoKey = `scroll_${index}`;
-                    const youtubeId = getYouTubeId(video.link);
-                    const thumbnailUrl = youtubeId
-                      ? `https://img.youtube.com/vi/${youtubeId}/hqdefault.jpg`
-                      : null;
-
-                    return (
-                      <div key={index} className={styles.eventCardWrapper}>
-                        <div className="event-card h-100">
-                          <div className="event-img">
-                            <div className="ratio ratio-16x9" style={{ position: "relative", backgroundColor: "#000" }}>
-                              {playingVideos[videoKey] ? (
-                                <iframe
-                                  width="560"
-                                  height="315"
-                                  src={video.link ? `${video.link}${video.link.includes('?') ? '&' : '?'}autoplay=1` : ""}
-                                  title={video.desc}
-                                  frameBorder="0"
-                                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                                  allowFullScreen
-                                ></iframe>
-                              ) : (
-                                <div
-                                  onClick={() => setPlayingVideos(prev => ({ ...prev, [videoKey]: true }))}
-                                  style={{ position: "absolute", inset: 0, cursor: "pointer" }}
-                                >
-                                  <LazyBannerImage
-                                    src={thumbnailUrl}
-                                    alt={video.desc}
-                                    style={{ width: "100%", height: "100%" }}
-                                  />
-                                  {/* Play Button Overlay */}
-                                  <div
-                                    style={{
-                                      position: "absolute",
-                                      inset: 0,
-                                      display: "flex",
-                                      alignItems: "center",
-                                      justifyContent: "center",
-                                      backgroundColor: "rgba(0, 0, 0, 0.15)",
-                                      zIndex: 2,
-                                    }}
-                                  >
-                                    <div
-                                      style={{
-                                        width: "50px",
-                                        height: "50px",
-                                        borderRadius: "50%",
-                                        backgroundColor: "rgba(255, 90, 0, 0.9)",
-                                        display: "flex",
-                                        alignItems: "center",
-                                        justifyContent: "center",
-                                        color: "#fff",
-                                        fontSize: "20px",
-                                        boxShadow: "0 4px 10px rgba(0,0,0,0.3)",
-                                        transition: "transform 0.2s ease, background-color 0.2s ease",
-                                      }}
-                                      className="play-btn-hover-home"
-                                    >
-                                      <i className="fas fa-play" style={{ marginLeft: "3px" }}></i>
-                                    </div>
-                                  </div>
-                                </div>
-                              )}
-                            </div>
-                            <div className="event-date">
-                              <span className="day">{video.date?.day}</span>
-                              <span className="month">{video.date?.month}</span>
-                            </div>
-                          </div>
-                          <div className="event-content p-4">
-                            <p className="mb-3">{video.desc}</p>
-                          </div>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-            ) : (
-              <div className="row">
-                {activeVideos.map((video, index) => {
-                  const videoKey = `row_${index}`;
-                  const youtubeId = getYouTubeId(video.link);
-                  const thumbnailUrl = youtubeId
-                    ? `https://img.youtube.com/vi/${youtubeId}/hqdefault.jpg`
-                    : null;
-
-                  return (
-                    <div key={index} className="col-lg-4 col-md-6 mb-4">
+                  {displayVideos.map((video, index) => (
+                    <div key={index} className={styles.eventCardWrapper}>
                       <div className="event-card h-100">
                         <div className="event-img">
-                          <div className="ratio ratio-16x9" style={{ position: "relative", backgroundColor: "#000" }}>
-                            {playingVideos[videoKey] ? (
-                              <iframe
-                                width="560"
-                                height="315"
-                                src={video.link ? `${video.link}${video.link.includes('?') ? '&' : '?'}autoplay=1` : ""}
-                                title={video.desc}
-                                frameBorder="0"
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                                allowFullScreen
-                              ></iframe>
-                            ) : (
-                              <div
-                                onClick={() => setPlayingVideos(prev => ({ ...prev, [videoKey]: true }))}
-                                style={{ position: "absolute", inset: 0, cursor: "pointer" }}
-                              >
-                                <LazyBannerImage
-                                  src={thumbnailUrl}
-                                  alt={video.desc}
-                                  style={{ width: "100%", height: "100%" }}
-                                />
-                                {/* Play Button Overlay */}
-                                <div
-                                  style={{
-                                    position: "absolute",
-                                    inset: 0,
-                                    display: "flex",
-                                    alignItems: "center",
-                                    justifyContent: "center",
-                                    backgroundColor: "rgba(0, 0, 0, 0.15)",
-                                    zIndex: 2,
-                                  }}
-                                >
-                                  <div
-                                    style={{
-                                      width: "50px",
-                                      height: "50px",
-                                      borderRadius: "50%",
-                                      backgroundColor: "rgba(255, 90, 0, 0.9)",
-                                      display: "flex",
-                                      alignItems: "center",
-                                      justifyContent: "center",
-                                      color: "#fff",
-                                      fontSize: "20px",
-                                      boxShadow: "0 4px 10px rgba(0,0,0,0.3)",
-                                      transition: "transform 0.2s ease, background-color 0.2s ease",
-                                    }}
-                                    className="play-btn-hover-home"
-                                  >
-                                    <i className="fas fa-play" style={{ marginLeft: "3px" }}></i>
-                                  </div>
-                                </div>
-                              </div>
-                            )}
+                          <div className="ratio ratio-16x9">
+                            <iframe
+                              width="560"
+                              height="315"
+                              src={video.link}
+                              title={video.desc}
+                              frameBorder="0"
+                              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                              loading="lazy"
+                              referrerPolicy="strict-origin-when-cross-origin"
+                              allowFullScreen
+                            ></iframe>
                           </div>
                           <div className="event-date">
                             <span className="day">{video.date?.day}</span>
@@ -541,8 +307,39 @@ const EventsSection = dynamic(
                         </div>
                       </div>
                     </div>
-                  );
-                })}
+                  ))}
+                </div>
+              </div>
+            ) : (
+              <div className="row">
+                {activeVideos.map((video, index) => (
+                  <div key={index} className="col-lg-4 col-md-6 mb-4">
+                    <div className="event-card h-100">
+                      <div className="event-img">
+                        <div className="ratio ratio-16x9">
+                          <iframe
+                            width="560"
+                            height="315"
+                            src={video.link}
+                            title={video.desc}
+                            frameBorder="0"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                            loading="lazy"
+                            referrerPolicy="strict-origin-when-cross-origin"
+                            allowFullScreen
+                          ></iframe>
+                        </div>
+                        <div className="event-date">
+                          <span className="day">{video.date?.day}</span>
+                          <span className="month">{video.date?.month}</span>
+                        </div>
+                      </div>
+                      <div className="event-content p-4">
+                        <p className="mb-3">{video.desc}</p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
               </div>
             )}
             <div className="text-center mt-5">
@@ -551,12 +348,6 @@ const EventsSection = dynamic(
               </Link>
             </div>
           </div>
-          <style>{`
-            .play-btn-hover-home:hover {
-              transform: scale(1.1);
-              background-color: rgba(255, 69, 0, 1.0) !important;
-            }
-          `}</style>
         </section>
       );
     }),
@@ -597,24 +388,15 @@ export default function HomeContent({ home }) {
                 key={index}
                 className={`slide ${index === activeIndex ? "active" : ""}`}
               >
-                {index === 0 ? (
-                  <Image
-                    src={(process.env.NEXT_PUBLIC_BASE_PATH || "") + slide.image}
-                    alt="Slide Image"
-                    fill
-                    className="slideImage"
-                    unoptimized
-                    priority
-                    sizes="100vw"
-                    quality={85}
-                  />
-                ) : (
-                  <LazyBannerImage
-                    src={(process.env.NEXT_PUBLIC_BASE_PATH || "") + slide.image}
-                    alt="Slide Image"
-                    style={{ position: "absolute", inset: 0, width: "100%", height: "100%" }}
-                  />
-                )}
+                <Image
+                  src={(process.env.NEXT_PUBLIC_BASE_PATH || "") + slide.image}
+                  alt="Slide Image"
+                  fill
+                  className="slideImage"
+                  priority={index === 0}
+                  sizes="100vw"
+                  quality={85}
+                />
               </div>
             ))}
           </div>
@@ -652,13 +434,19 @@ export default function HomeContent({ home }) {
               <div className="col-lg-6 mb-4 mb-lg-0">
                 <div className="about-img text-center">
                   {home?.about?.images?.[0] ? (
-                    <div className="img-fluid rounded overflow-hidden mx-auto" style={{ width: "100%", maxWidth: "600px", height: "450px" }}>
-                      <LazyBannerImage
-                        src={(process.env.NEXT_PUBLIC_BASE_PATH || "") + home.about.images[0]}
-                        alt={home.about.title || "About"}
-                        style={{ objectFit: "cover", width: "100%", height: "100%" }}
-                      />
-                    </div>
+                    <Image
+                      src={(process.env.NEXT_PUBLIC_BASE_PATH || "") + home.about.images[0]}
+                      alt={home.about.title || "About"}
+                      className="img-fluid rounded"
+                      width={600}
+                      height={450}
+                      style={{
+                        objectFit: "cover",
+                        height: "auto",
+                        width: "100%",
+                        maxWidth: "600px",
+                      }}
+                    />
                   ) : (
                     <div
                       className="rounded bg-light d-flex align-items-center justify-content-center"

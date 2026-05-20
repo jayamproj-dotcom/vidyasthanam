@@ -1,69 +1,244 @@
 # Deployment Guide: vidyasthanam.com (DirectAdmin Standalone)
 
-This guide outlines the steps to deploy the Next.js application using the **Standalone** method, which is optimized for performance and lower memory usage on DirectAdmin servers.
+This guide explains how to deploy the Next.js application using the Standalone production build with PM2 on a DirectAdmin server.
 
 ---
 
-## 1. Local Configuration
-Ensure `next.config.mjs` has the standalone output enabled:
+# 1. Local Configuration
+
+Ensure `next.config.mjs` contains:
+
 ```javascript
 const nextConfig = {
-  output: 'standalone',
-  // ... other configs
-}
-```
-
-## 2. Build Process
-Run the production build:
-```bash
-npm run build
-```
-
-## 3. Prepare Deployment Package
-Next.js generates a minimal app in `.next/standalone`. You must manually add static files and your PM2 config to it:
-
-1.  **Copy `public/`** folder into `.next/standalone/public`
-2.  **Copy `.next/static/`** folder into `.next/standalone/.next/static`
-3.  **Create/Copy `ecosystem.config.js`** into `.next/standalone/` with the following content:
-
-```javascript
-module.exports = {
-  apps: [{
-    name: "vidyasthanam",
-    script: "server.js",
-    env: {
-      NODE_ENV: "production",
-      PORT: 3009
-    }
-  }]
+  output: "standalone",
 };
-```
 
-## 4. Upload & Server Setup
-1.  **Zip everything** inside the `.next/standalone` folder.
-2.  **Upload & Extract** on your server (recommended: `/home/username/vidyasthanam-app/`).
-3.  **Create `.env`** in the server folder with production values (MongoDB URI, JWT Secret, etc.).
-4.  **Start the App** via SSH:
-    ```bash
-    pm2 start ecosystem.config.js
-    pm2 save
-    ```
+export default nextConfig;
+2. Build the Application
 
-## 5. Reverse Proxy (.htaccess)
-Place this `.htaccess` file in your domain's **`public_html`** folder to link the domain to the app:
+Run:
 
-```apache
+npm install
+npm run build
+3. Enable .env Support in Standalone Server
+
+The standalone server.js does not automatically load .env.
+
+Install dotenv:
+
+npm install dotenv
+
+Open:
+
+.next/standalone/server.js
+
+Add this as the FIRST LINE:
+
+require("dotenv").config();
+
+Example:
+
+require("dotenv").config();
+
+const path = require("path");
+
+const dir = path.join(__dirname);
+
+process.env.NODE_ENV = "production";
+process.chdir(__dirname);
+
+const currentPort = parseInt(process.env.PORT, 10) || 3000;
+
+This allows:
+
+PORT=3009
+
+to work correctly in production.
+
+4. Prepare Standalone Deployment Folder
+
+After build, copy required files into .next/standalone.
+
+Copy public
+cp -r public .next/standalone/
+Copy static assets
+cp -r .next/static .next/standalone/.next/
+5. Create PM2 Config
+
+Create:
+
+.next/standalone/ecosystem.config.js
+
+Content:
+
+module.exports = {
+  apps: [
+    {
+      name: "vidyasthanam",
+      script: "server.js",
+      cwd: __dirname,
+      env: {
+        NODE_ENV: "production",
+      },
+    },
+  ],
+};
+
+PORT will be loaded from .env.
+
+6. Create Production .env
+
+Inside:
+
+.next/standalone/.env
+
+Add:
+
+MONGODB_URI=mongodb://127.0.0.1:27017/vidyasthanam
+
+NEXT_PUBLIC_BASE_PATH=
+
+JWT_SECRET=your_secure_secret
+
+DOMAIN_URL=https://www.vidyasthanam.com
+
+REVALIDATE=60
+
+NEXT_PUBLIC_RECAPTCHA_SITE_KEY=your_site_key
+
+RECAPTCHA_SECRET_KEY=your_secret_key
+
+PORT=3009
+
+Important:
+
+Keep only ONE JWT_SECRET
+Never commit .env to GitHub
+7. Upload to Server
+
+Zip everything INSIDE:
+
+.next/standalone/
+
+Upload and extract to:
+
+/home/username/vidyasthanam-app/
+
+Example structure:
+
+vidyasthanam-app/
+├── .env
+├── ecosystem.config.js
+├── server.js
+├── public/
+├── .next/
+└── node_modules/
+8. Start Application
+
+SSH into server:
+
+cd ~/vidyasthanam-app
+
+Start PM2:
+
+pm2 start ecosystem.config.js
+
+Save PM2:
+
+pm2 save
+
+Check status:
+
+pm2 status
+
+Check logs:
+
+pm2 logs vidyasthanam
+9. Verify Port
+
+Check if app listens on 3009:
+
+ss -tulpn | grep 3009
+
+You should see:
+
+LISTEN 0 511 0.0.0.0:3009
+10. DirectAdmin Reverse Proxy
+
+Place this .htaccess inside:
+
+domains/vidyasthanam.com/public_html/.htaccess
+
+Content:
+
 Options -Indexes
+
 RewriteEngine On
 
-# Allow direct access to uploads if they are stored in public_html
+# Allow uploads directly
 RewriteCond %{REQUEST_URI} !^/uploads/
 
-# Forward all other traffic to the Node.js app on port 3009
+# Proxy all requests to Node.js app
 RewriteRule ^(.*)$ http://127.0.0.1:3009/$1 [P,L]
 
 ProxyPreserveHost On
-```
+11. Common Errors
+503 Service Unavailable
 
----
-*Note: If you receive a 503 error, ensure the PM2 process is running (`pm2 status`). If you receive a 500 error, ensure `mod_proxy` is enabled on your server.*
+Check:
+
+pm2 status
+
+If app is offline:
+
+pm2 logs vidyasthanam
+
+Usually caused by:
+
+missing .env
+wrong PORT
+app crash
+missing dependencies
+PORT Not Working
+
+Verify:
+
+cat .env
+
+Verify server.js contains:
+
+require("dotenv").config();
+
+Verify logs:
+
+pm2 logs vidyasthanam
+500 Internal Server Error
+
+Enable Apache proxy modules:
+
+mod_proxy
+mod_proxy_http
+mod_rewrite
+12. Restart Application After Update
+pm2 restart vidyasthanam
+13. Rebuild Deployment
+
+After code changes:
+
+npm run build
+
+Repeat:
+
+copy public
+copy static
+upload standalone
+restart PM2
+14. Security Recommendations
+
+Immediately rotate:
+
+MongoDB password
+JWT secrets
+reCAPTCHA secrets
+
+Do not expose credentials publicly.

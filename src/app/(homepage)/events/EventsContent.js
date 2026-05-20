@@ -4,108 +4,6 @@ import React, { useState, useEffect, useRef } from "react";
 import Banner from "@/components/Banner";
 import api from "@/lib/api";
 
-// ─────────────────────────────────────────────
-// Custom Hook: Intersection Observer
-// ─────────────────────────────────────────────
-const useIntersectionObserver = (options = {}) => {
-  const [isVisible, setIsVisible] = useState(false);
-  const ref = React.useRef(null);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-          observer.disconnect();
-        }
-      },
-      { threshold: 0.1, ...options }
-    );
-
-    if (ref.current) observer.observe(ref.current);
-    return () => observer.disconnect();
-  }, []);
-
-  return [ref, isVisible];
-};
-
-// ─────────────────────────────────────────────
-// Lazy Image Component
-// ─────────────────────────────────────────────
-const LazyBannerImage = React.memo(({ src, alt, className, style, onClick }) => {
-  const [ref, isVisible] = useIntersectionObserver();
-  const [loaded, setLoaded] = useState(false);
-
-  return (
-    <div
-      ref={ref}
-      onClick={onClick}
-      style={{
-        width: "100%",
-        height: "100%",
-        overflow: "hidden",
-        background: "#f0f0f0",
-        position: "relative",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        ...style,
-      }}
-    >
-      <style>{`
-        @keyframes lazyShimmer {
-          0%   { background-position: 200% 0; }
-          100% { background-position: -200% 0; }
-        }
-      `}</style>
-
-      {/* Shimmer */}
-      {!loaded && (
-        <div
-          style={{
-            position: "absolute",
-            inset: 0,
-            background:
-              "linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%)",
-            backgroundSize: "200% 100%",
-            animation: "lazyShimmer 1.2s infinite",
-            zIndex: 1
-          }}
-        />
-      )}
-
-      {/* Render <img> only when scrolled into view */}
-      {isVisible && src ? (
-        <img
-          src={src}
-          alt={alt}
-          className={className}
-          onLoad={() => setLoaded(true)}
-          style={{
-            width: "100%",
-            height: "100%",
-            objectFit: "cover",
-            opacity: loaded ? 1 : 0,
-            transition: "opacity 0.6s ease-in-out",
-            display: "block",
-          }}
-        />
-      ) : !src ? (
-        <i className="fas fa-image" style={{ color: "#ccc", fontSize: "40px" }} />
-      ) : null}
-    </div>
-  );
-});
-LazyBannerImage.displayName = "LazyBannerImage";
-
-// Helper to extract YouTube video ID from URL
-function getYouTubeId(url) {
-  if (!url) return null;
-  const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
-  const match = url.match(regExp);
-  return (match && match[2].length === 11) ? match[2] : null;
-}
-
 export default function EventsContent({ initialData }) {
   const [events, setEvents] = useState(() => {
     if (initialData?.events) {
@@ -124,7 +22,6 @@ export default function EventsContent({ initialData }) {
   });
   
   const [loading, setLoading] = useState(!initialData);
-  const [playingVideos, setPlayingVideos] = useState({});
   const contentRef = useRef(null);
 
   useEffect(() => {
@@ -163,7 +60,6 @@ export default function EventsContent({ initialData }) {
 
   const handleCategoryChange = (id) => {
     setActiveEventId(id);
-    setPlayingVideos({}); // Reset playing videos state when category changes
     if (contentRef.current) {
       contentRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
     }
@@ -205,75 +101,21 @@ export default function EventsContent({ initialData }) {
                   <div className="vs-event-container active">
                     <h3 className="vs-event-title">{currentEvent.dateLabel}</h3>
                     <div className="vs-video-grid">
-                      {currentEvent.videos?.map((video, idx) => {
-                        const videoKey = `${currentEvent._id}_${idx}`;
-                        const youtubeId = getYouTubeId(video.url);
-                        const thumbnailUrl = youtubeId
-                          ? `https://img.youtube.com/vi/${youtubeId}/hqdefault.jpg`
-                          : null;
-
-                        return (
-                          <div key={idx} className="vs-video-card">
-                            <div className="vs-video-wrapper" style={{ position: "relative" }}>
-                              {playingVideos[videoKey] ? (
-                                <iframe
-                                  src={video.url ? `${video.url}${video.url.includes('?') ? '&' : '?'}autoplay=1` : ""}
-                                  title={video.title}
-                                  allowFullScreen
-                                  allow="autoplay; encrypted-media"
-                                  loading="lazy"
-                                ></iframe>
-                              ) : (
-                                <div
-                                  className="vs-video-placeholder"
-                                  onClick={() => setPlayingVideos(prev => ({ ...prev, [videoKey]: true }))}
-                                  style={{ position: "absolute", inset: 0, cursor: "pointer" }}
-                                >
-                                  <LazyBannerImage
-                                    src={thumbnailUrl}
-                                    alt={video.title}
-                                    style={{ width: "100%", height: "100%" }}
-                                  />
-                                  {/* Play Button Overlay */}
-                                  <div
-                                    style={{
-                                      position: "absolute",
-                                      inset: 0,
-                                      display: "flex",
-                                      alignItems: "center",
-                                      justifyContent: "center",
-                                      backgroundColor: "rgba(0, 0, 0, 0.15)",
-                                      zIndex: 2,
-                                    }}
-                                  >
-                                    <div
-                                      style={{
-                                        width: "60px",
-                                        height: "60px",
-                                        borderRadius: "50%",
-                                        backgroundColor: "rgba(255, 90, 0, 0.9)",
-                                        display: "flex",
-                                        alignItems: "center",
-                                        justifyContent: "center",
-                                        color: "#fff",
-                                        fontSize: "24px",
-                                        boxShadow: "0 4px 12px rgba(0,0,0,0.35)",
-                                        transition: "transform 0.2s ease, background-color 0.2s ease",
-                                      }}
-                                      className="play-btn-hover"
-                                    >
-                                      <i className="fas fa-play" style={{ marginLeft: "4px" }}></i>
-                                    </div>
-                                  </div>
-                                </div>
-                              )}
-                            </div>
-                            <div className="vs-video-details">
-                              <h5 className="vs-video-heading">{video.title}</h5>
-                            </div>
+                      {currentEvent.videos?.map((video, idx) => (
+                        <div key={idx} className="vs-video-card">
+                          <div className="vs-video-wrapper">
+                            <iframe
+                              src={video.url}
+                              title={video.title}
+                              allowFullScreen
+                              loading="lazy"
+                            ></iframe>
                           </div>
-                        );
-                      })}
+                          <div className="vs-video-details">
+                            <h5 className="vs-video-heading">{video.title}</h5>
+                          </div>
+                        </div>
+                      ))}
                     </div>
                   </div>
                 )}
@@ -292,13 +134,6 @@ export default function EventsContent({ initialData }) {
           )}
         </div>
       </section>
-
-      <style>{`
-        .vs-video-placeholder:hover .play-btn-hover {
-          transform: scale(1.1);
-          background-color: rgba(255, 69, 0, 1.0) !important;
-        }
-      `}</style>
     </div>
   );
 }
