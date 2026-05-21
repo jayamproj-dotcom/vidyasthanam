@@ -1,7 +1,10 @@
 import React from "react";
 import api from "@/lib/api";
 import PublicationsContent from "./PublicationsContent";
+import Banner from "@/components/Banner";
 import { getPublicationsData } from "@/lib/services/dataService";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 
 /**
  * Server Component for the Publications Page
@@ -61,7 +64,7 @@ export default async function PublicationsPage() {
         <Banner />
         <div className="container py-5 text-center">
           <div className="py-5">
-            <i className="fas fa-info-circle fa-4x text-orange mb-4"></i>
+            <FontAwesomeIcon icon={faInfoCircle} size="4x" className="text-orange mb-4" />
             <h3>Publications & Resources Temporarily Unavailable</h3>
             <p className="text-muted">Please check back later as we update our collection.</p>
           </div>

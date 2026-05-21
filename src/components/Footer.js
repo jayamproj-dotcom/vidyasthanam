@@ -1,6 +1,9 @@
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEnvelope, faLink } from "@fortawesome/free-solid-svg-icons";
+import { faFacebookF, faYoutube, faWhatsapp, faInstagram, faTwitter, faLinkedinIn } from "@fortawesome/free-brands-svg-icons";
 
 const Footer = ({ navData = [], coursesData = [], settingsData = null, contactData = null }) => {
   // Filter active navigation links for the "Quick Links" column
@@ -34,13 +37,13 @@ const Footer = ({ navData = [], coursesData = [], settingsData = null, contactDa
 
   const getPlatformIcon = (platform) => {
     const p = platform.toLowerCase();
-    if (p.includes("facebook")) return "fab fa-facebook-f";
-    if (p.includes("youtube")) return "fab fa-youtube";
-    if (p.includes("whatsapp")) return "fab fa-whatsapp";
-    if (p.includes("instagram")) return "fab fa-instagram";
-    if (p.includes("twitter")) return "fab fa-twitter";
-    if (p.includes("linkedin")) return "fab fa-linkedin-in";
-    return "fas fa-link";
+    if (p.includes("facebook")) return faFacebookF;
+    if (p.includes("youtube")) return faYoutube;
+    if (p.includes("whatsapp")) return faWhatsapp;
+    if (p.includes("instagram")) return faInstagram;
+    if (p.includes("twitter")) return faTwitter;
+    if (p.includes("linkedin")) return faLinkedinIn;
+    return faLink;
   };
 
   return (
@@ -118,7 +121,7 @@ const Footer = ({ navData = [], coursesData = [], settingsData = null, contactDa
             <div className="contact-info">
               {whatsappObj?.isActive !== false && (
                 <p>
-                  <i className="fab fa-whatsapp me-2"></i>
+                  <FontAwesomeIcon icon={faWhatsapp} className="me-2" />
                   <a
                     href={whatsappLink}
                     target="_blank"
@@ -130,7 +133,7 @@ const Footer = ({ navData = [], coursesData = [], settingsData = null, contactDa
               )}
 
               <p>
-                <i className="fas fa-envelope me-2"></i>
+                <FontAwesomeIcon icon={faEnvelope} className="me-2" />
                 <a
                   href={`mailto:${officialEmail}`}
                   target="_blank"
@@ -143,8 +146,8 @@ const Footer = ({ navData = [], coursesData = [], settingsData = null, contactDa
 
             <div className="social-links mt-3">
               {activeSocialNetworks.map((net) => (
-                <a key={net.platform} href={net.link} target="_blank" rel="noopener noreferrer" title={net.platform}>
-                  <i className={getPlatformIcon(net.platform)}></i>
+                <a key={net.platform} href={net.link} target="_blank" rel="noopener noreferrer" title={net.platform} aria-label={net.platform}>
+                  <FontAwesomeIcon icon={getPlatformIcon(net.platform)} />
                 </a>
               ))}
             </div>
@@ -175,8 +178,9 @@ const Footer = ({ navData = [], coursesData = [], settingsData = null, contactDa
           className="whatsapp-button"
           target="_blank"
           rel="noopener noreferrer"
+          aria-label="Contact us on WhatsApp"
         >
-          <i className="fab fa-whatsapp"></i>
+          <FontAwesomeIcon icon={faWhatsapp} />
         </a>
       )}
     </footer>

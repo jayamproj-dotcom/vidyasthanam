@@ -6,6 +6,8 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import styles from "./navbar.module.css";
 import api from "@/lib/api";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faBullhorn, faHome, faTimes } from "@fortawesome/free-solid-svg-icons";
 
 const Navbar = ({ initialData = [] }) => {
   const pathname = usePathname();
@@ -56,7 +58,7 @@ const Navbar = ({ initialData = [] }) => {
       <div className={styles["topbar-wrapper"]}>
         <div className={styles["marquee"]}>
           <span className={styles["marquee-content"]}>
-            <i className="fas fa-bullhorn me-2"></i> Courses start from Tamil
+            <FontAwesomeIcon icon={faBullhorn} className="me-2" /> Courses start from Tamil
             New Year. Registrations Open.
           </span>
         </div>
@@ -108,14 +110,15 @@ const Navbar = ({ initialData = [] }) => {
                     <Link
                       href="/"
                       className={`nav-link navbar-home${isActive("/")}`}
+                      aria-label="Home"
                       style={{
                         background: "#ff7703",
                         borderRadius: "50%",
                         padding: "14px 18px",
                       }}
                     >
-                      <i
-                        className="fas fa-home"
+                      <FontAwesomeIcon
+                        icon={faHome}
                         style={{ color: "#fff", padding: "8px 8px" }}
                       />
                     </Link>
@@ -150,6 +153,7 @@ const Navbar = ({ initialData = [] }) => {
                 className="navbar-toggler d-xl-none border-0"
                 type="button"
                 onClick={() => setIsMenuOpen(true)}
+                aria-label="Open navigation menu"
               >
                 <span className="navbar-toggler-icon" />
               </button>
@@ -188,8 +192,9 @@ const Navbar = ({ initialData = [] }) => {
                 }}
               >
                 {/* Close button */}
-                <button
+                 <button
                   onClick={() => setIsMenuOpen(false)}
+                  aria-label="Close navigation menu"
                   style={{
                     position: "absolute",
                     top: "20px",
@@ -202,7 +207,7 @@ const Navbar = ({ initialData = [] }) => {
                     padding: "10px",
                   }}
                 >
-                  <i className="fas fa-times" />
+                  <FontAwesomeIcon icon={faTimes} />
                 </button>
 
                 <ul
@@ -222,7 +227,7 @@ const Navbar = ({ initialData = [] }) => {
                       onClick={() => setIsMenuOpen(false)}
                       className="nav-link text-dark d-flex align-items-center gap-2"
                     >
-                      <i className="fas fa-home" style={{ color: "#ff7703" }} />{" "}
+                      <FontAwesomeIcon icon={faHome} style={{ color: "#ff7703" }} />{" "}
                       Home
                     </Link>
                   </li>

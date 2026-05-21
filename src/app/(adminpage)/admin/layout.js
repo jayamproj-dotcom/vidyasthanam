@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import AdminSidebar from "@/components/AdminSidebar";
 import AdminHeader from "@/components/AdminHeader";
 import { ToastProvider } from "@/components/ToastContext";
+import FontAwesomeLoader from "@/components/FontAwesomeLoader";
 import styles from "./admin.module.css";
 
 export default function AdminLayout({ children }) {
@@ -15,13 +16,14 @@ export default function AdminLayout({ children }) {
   const isLoginPage = pathname === "/admin" || pathname === "/admin/";
 
   if (isLoginPage) {
-    return <ToastProvider>{children}</ToastProvider>;
+    return <ToastProvider><FontAwesomeLoader />{children}</ToastProvider>;
   }
 
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
 
   return (
     <ToastProvider>
+      <FontAwesomeLoader />
       <div className={styles.adminLayout}>
         {/* Sidebar Overlay for Mobile */}
         <div 

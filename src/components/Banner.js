@@ -2,8 +2,11 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import api from "@/lib/api";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faImage, faHome } from "@fortawesome/free-solid-svg-icons";
 
 // ─────────────────────────────────────────────
 // 1. Custom Hook: Intersection Observer (from Admin)
@@ -68,17 +71,17 @@ const LazyBannerImage = React.memo(({ src, alt }) => {
 
       {/* Render <img> only when scrolled into view */}
       {isVisible && src ? (
-        <img
+        <Image
           src={(process.env.NEXT_PUBLIC_BASE_PATH || "") + src}
           alt={alt}
+          fill
+          priority
+          sizes="100vw"
           onLoad={() => setLoaded(true)}
           style={{
-            width: "100%",
-            height: "100%",
             objectFit: "cover",
             opacity: loaded ? 1 : 0,
             transition: "opacity 0.6s ease-in-out",
-            display: "block",
           }}
         />
       ) : !src ? (
@@ -92,7 +95,7 @@ const LazyBannerImage = React.memo(({ src, alt }) => {
             background: "#eee"
           }}
         >
-          <i className="fas fa-image" style={{ color: "#ccc", fontSize: "40px" }} />
+          <FontAwesomeIcon icon={faImage} style={{ color: "#ccc", fontSize: "40px" }} />
         </div>
       ) : null}
     </div>
@@ -180,7 +183,7 @@ const Banner = () => {
                 <ol className="breadcrumb">
                   <li className="breadcrumb-item">
                     <Link href="/home" className="text-decoration-none text-white opacity-75">
-                      <i className="fas fa-home me-1"></i> Home
+                      <FontAwesomeIcon icon={faHome} className="me-1" /> Home
                     </Link>
                   </li>
                   <li className="breadcrumb-item active text-white" aria-current="page">

@@ -3,6 +3,8 @@ import api from "@/lib/api";
 import GalleryContent from "./GalleryContent";
 import Banner from "@/components/Banner";
 import { getGalleryData } from "@/lib/services/dataService";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faImages } from "@fortawesome/free-solid-svg-icons";
 
 /**
  * Server Component for the Gallery Page
@@ -63,7 +65,7 @@ export default async function GalleryPage() {
         <Banner />
         <div className="container py-5 text-center">
           <div className="py-5">
-            <i className="fas fa-images fa-4x text-orange mb-4"></i>
+            <FontAwesomeIcon icon={faImages} size="4x" className="text-orange mb-4" />
             <h3>Gallery Temporarily Unavailable</h3>
             <p className="text-muted">We are currently updating our photo collection. Please check back soon!</p>
           </div>

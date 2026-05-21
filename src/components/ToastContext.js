@@ -2,6 +2,8 @@
 
 import React, { createContext, useContext, useState, useCallback, useEffect } from "react";
 import styles from "./toast.module.css";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCheckCircle, faExclamationCircle } from "@fortawesome/free-solid-svg-icons";
 
 const ToastContext = createContext();
 
@@ -13,7 +15,7 @@ const Toast = ({ message, type, onClose }) => {
 
   return (
     <div className={`${styles.toast} ${type === "success" ? styles.toastSuccess : styles.toastError}`}>
-      <i className={type === "success" ? "fas fa-check-circle" : "fas fa-exclamation-circle"}></i>
+      <FontAwesomeIcon icon={type === "success" ? faCheckCircle : faExclamationCircle} className={styles.toastIcon} />
       <div className={styles.toastContent}>
         <p>{message}</p>
       </div>

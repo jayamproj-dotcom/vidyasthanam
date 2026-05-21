@@ -4,6 +4,8 @@ import React, { useState, useEffect } from "react";
 import Banner from "@/components/Banner";
 import api from "@/lib/api";
 import ReCAPTCHA from "react-google-recaptcha";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCheckCircle, faExclamationCircle, faPhone, faEnvelope, faPaperPlane } from "@fortawesome/free-solid-svg-icons";
 const FloatingToast = ({ message, type, onClose }) => {
   useEffect(() => {
     const timer = setTimeout(onClose, 5000);
@@ -27,7 +29,7 @@ const FloatingToast = ({ message, type, onClose }) => {
       minWidth: "300px",
       maxWidth: "450px"
     }}>
-      <i className={type === "success" ? "fas fa-check-circle" : "fas fa-exclamation-circle"} style={{ fontSize: "22px", color: type === "success" ? "#198754" : "#dc3545" }}></i>
+      <FontAwesomeIcon icon={type === "success" ? faCheckCircle : faExclamationCircle} style={{ fontSize: "22px", color: type === "success" ? "#198754" : "#dc3545" }} />
       <div style={{ flex: 1, fontSize: "15px", color: "#333", fontWeight: 500 }}>{message}</div>
       <button onClick={onClose} style={{ background: "none", border: "none", cursor: "pointer", fontSize: "20px", color: "#999", padding: "0 5px", lineHeight: 1 }}>&times;</button>
     </div>
@@ -125,7 +127,7 @@ export default function ContactContent({ initialData }) {
 
                 <div className="contact-info-item">
                   <div className="contact-icon">
-                    <i className="fas fa-phone"></i>
+                    <FontAwesomeIcon icon={faPhone} />
                   </div>
                   <div>
                     <h5 className="mb-1">Phone</h5>
@@ -144,7 +146,7 @@ export default function ContactContent({ initialData }) {
 
                 <div className="contact-info-item">
                   <div className="contact-icon">
-                    <i className="fas fa-envelope"></i>
+                    <FontAwesomeIcon icon={faEnvelope} />
                   </div>
                   <div>
                     <h5 className="mb-1">Email</h5>
@@ -202,7 +204,7 @@ export default function ContactContent({ initialData }) {
                           </>
                         ) : (
                           <>
-                            <i className="fas fa-paper-plane me-2"></i>Send Message
+                            <FontAwesomeIcon icon={faPaperPlane} className="me-2" />Send Message
                           </>
                         )}
                       </button>

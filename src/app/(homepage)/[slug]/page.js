@@ -2,8 +2,11 @@
 
 import React, { useState, useEffect } from "react";
 import { useParams, notFound } from "next/navigation";
+import Image from "next/image";
 import Banner from "@/components/Banner";
 import api from "@/lib/api";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 
 export default function DynamicPage() {
   const params = useParams();
@@ -32,7 +35,7 @@ export default function DynamicPage() {
     if (slug) fetchPageSettings();
   }, [slug]);
 
-  if (loading) return <div style={{ height: "60vh", display: "flex", alignItems: "center", justifyContent: "center" }}><i className="fas fa-spinner fa-spin fa-2x"></i></div>;
+  if (loading) return <div style={{ height: "60vh", display: "flex", alignItems: "center", justifyContent: "center" }}><FontAwesomeIcon icon={faSpinner} spin size="2x" /></div>;
   
   if (!pageData) return notFound();
 
@@ -54,7 +57,7 @@ export default function DynamicPage() {
                 Please check back soon for updates on our {pageData.name.toLowerCase()} programs and initiatives.
               </p>
               <div className="mt-5">
-                <img src={(process.env.NEXT_PUBLIC_BASE_PATH || "") + "/img/logocanva1.png"} alt="Logo" width={80} style={{ opacity: 0.2 }} />
+                <Image src={(process.env.NEXT_PUBLIC_BASE_PATH || "") + "/img/logocanva1.png"} alt="Logo" width={80} height={80} style={{ opacity: 0.2, height: "auto" }} />
               </div>
             </div>
           </div>

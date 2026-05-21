@@ -4,6 +4,8 @@ import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Banner from "@/components/Banner";
 import api from "@/lib/api";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTimes, faChevronLeft, faChevronRight } from "@fortawesome/free-solid-svg-icons";
 
 export default function AboutContent({ initialData }) {
   const [data, setData] = useState(
@@ -257,7 +259,7 @@ export default function AboutContent({ initialData }) {
             onClick={(e) => e.stopPropagation()}
           >
             <span className="lightbox-close" onClick={closeLightbox}>
-              <i className="fas fa-times"></i>
+              <FontAwesomeIcon icon={faTimes} />
             </span>
             <Image
               src={lightbox.currentImg}
@@ -270,10 +272,10 @@ export default function AboutContent({ initialData }) {
             <div className="lightbox-caption">{lightbox.currentCaption}</div>
           </div>
           <span className="lightbox-control lightbox-prev" onClick={prevImg}>
-            <i className="fas fa-chevron-left"></i>
+            <FontAwesomeIcon icon={faChevronLeft} />
           </span>
           <span className="lightbox-control lightbox-next" onClick={nextImg}>
-            <i className="fas fa-chevron-right"></i>
+            <FontAwesomeIcon icon={faChevronRight} />
           </span>
         </div>
       )}

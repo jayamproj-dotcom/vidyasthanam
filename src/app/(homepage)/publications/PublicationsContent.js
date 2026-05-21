@@ -4,6 +4,8 @@ import React, { useState, useEffect } from "react";
 import Banner from "@/components/Banner";
 import styles from "./publication.module.css";
 import api from "@/lib/api";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faBookOpen, faFolderOpen, faFilePdf, faExternalLinkAlt } from "@fortawesome/free-solid-svg-icons";
 
 export default function PublicationsContent({ initialData }) {
   const [activeCategory, setActiveCategory] = useState("publications");
@@ -82,9 +84,10 @@ export default function PublicationsContent({ initialData }) {
                 <div className="course-category active">
                   <div className="card shadow-sm border rounded-4 p-4 list-scroll bg-white">
                     <h4 className="mb-4 text-orange border-bottom pb-2">
-                      <i
-                        className={`fas ${activeCategory === "publications" ? "fa-book-open" : "fa-folder-open"} me-2`}
-                      ></i>
+                      <FontAwesomeIcon
+                        icon={activeCategory === "publications" ? faBookOpen : faFolderOpen}
+                        className="me-2"
+                      />
                       {activeCategory === "publications"
                         ? "Publications"
                         : "Resources"}
@@ -110,11 +113,11 @@ export default function PublicationsContent({ initialData }) {
                               rel="noopener noreferrer"
                               className="d-flex align-items-center p-3 rounded text-decoration-none shadow-sm pdf-link-item bg-light h-100"
                             >
-                              <i className="fas fa-file-pdf fa-2x text-orange me-3"></i>
+                              <FontAwesomeIcon icon={faFilePdf} size="2x" className="text-orange me-3" />
                               <span className="text-dark fw-medium lh-sm">
                                 {doc.name}
                               </span>
-                              <i className="fas fa-external-link-alt ms-auto text-muted small"></i>
+                              <FontAwesomeIcon icon={faExternalLinkAlt} className="ms-auto text-muted small" />
                             </a>
                           </div>
                         ))}

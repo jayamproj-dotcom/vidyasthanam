@@ -4,6 +4,8 @@ import React, { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
 import Banner from "@/components/Banner";
 import api from "@/lib/api";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSpinner, faChevronLeft, faChevronRight, faTimes } from "@fortawesome/free-solid-svg-icons";
 
 export default function GalleryContent({ initialData }) {
   const [data, setData] = useState(initialData || { images: [] });
@@ -84,7 +86,7 @@ export default function GalleryContent({ initialData }) {
 
           {loading && images.length === 0 ? (
             <div className="text-center py-5">
-              <i className="fas fa-spinner fa-spin fa-3x text-orange"></i>
+              <FontAwesomeIcon icon={faSpinner} spin size="3x" className="text-orange" />
             </div>
           ) : images.length > 0 ? (
             <div className="masonry-grid">
@@ -124,8 +126,8 @@ export default function GalleryContent({ initialData }) {
           onClick={(e) => e.target.id === "sliderOverlay" && closeSlider()}
         >
           <div className="slider-container">
-            <button className="slider-btn prev-btn" onClick={prevImage}>
-              <i className="fas fa-chevron-left"></i>
+            <button className="slider-btn prev-btn" onClick={prevImage} aria-label="Previous image">
+              <FontAwesomeIcon icon={faChevronLeft} />
             </button>
             <div className="slider-frame">
               <Image
@@ -139,15 +141,16 @@ export default function GalleryContent({ initialData }) {
                 style={{ objectFit: "contain" }}
               />
             </div>
-            <button className="slider-btn next-btn" onClick={nextImage}>
-              <i className="fas fa-chevron-right"></i>
+            <button className="slider-btn next-btn" onClick={nextImage} aria-label="Next image">
+              <FontAwesomeIcon icon={faChevronRight} />
             </button>
             <button
               className="close-btn"
               id="closeSliderBtn"
               onClick={closeSlider}
+              aria-label="Close slider"
             >
-              <i className="fas fa-times"></i>
+              <FontAwesomeIcon icon={faTimes} />
             </button>
             <div className="counter-indicator" id="imageCounter">
               {currentIndex + 1} / {images.length}

@@ -4,6 +4,8 @@ import React, { useState, useEffect } from "react";
 import Banner from "@/components/Banner";
 import api from "@/lib/api";
 import ReCAPTCHA from "react-google-recaptcha";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCheckCircle, faExclamationCircle, faUserGraduate } from "@fortawesome/free-solid-svg-icons";
 
 const FloatingToast = ({ message, type, onClose }) => {
   useEffect(() => {
@@ -28,7 +30,7 @@ const FloatingToast = ({ message, type, onClose }) => {
       minWidth: "300px",
       maxWidth: "450px"
     }}>
-      <i className={type === "success" ? "fas fa-check-circle" : "fas fa-exclamation-circle"} style={{ fontSize: "22px", color: type === "success" ? "#198754" : "#dc3545" }}></i>
+      <FontAwesomeIcon icon={type === "success" ? faCheckCircle : faExclamationCircle} style={{ fontSize: "22px", color: type === "success" ? "#198754" : "#dc3545" }} />
       <div style={{ flex: 1, fontSize: "15px", color: "#333", fontWeight: 500 }}>{message}</div>
       <button onClick={onClose} style={{ background: "none", border: "none", cursor: "pointer", fontSize: "20px", color: "#999", padding: "0 5px", lineHeight: 1 }}>&times;</button>
     </div>
@@ -128,8 +130,8 @@ export default function RegistrationContent({ initialData }) {
           <div className="row">
             <div className="col-lg-8 mx-auto">
               <div className="registration-card">
-                <div className="form-icon">
-                  <i className="fas fa-user-graduate"></i>
+                 <div className="form-icon">
+                  <FontAwesomeIcon icon={faUserGraduate} />
                   <span className="form-title">Registration Form</span>
                 </div>
 

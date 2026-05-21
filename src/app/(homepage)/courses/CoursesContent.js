@@ -4,6 +4,8 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import Banner from "@/components/Banner";
 import api from "@/lib/api";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCheckCircle, faSpinner } from "@fortawesome/free-solid-svg-icons";
 
 export default function CoursesContent({ initialData }) {
   const [courses, setCourses] = useState(() => {
@@ -116,7 +118,7 @@ export default function CoursesContent({ initialData }) {
                           <ul className="course-features list-unstyled">
                             {currentCourse.points?.map((feature, idx) => (
                               <li key={idx} className="mb-2 d-flex">
-                                <i className="fas fa-check-circle text-orange mt-1 me-2"></i>
+                                <FontAwesomeIcon icon={faCheckCircle} className="text-orange mt-1 me-2" />
                                 <span>{feature}</span>
                               </li>
                             ))}
@@ -163,7 +165,7 @@ export default function CoursesContent({ initialData }) {
 
           {loading && (
             <div className="text-center py-5">
-              <i className="fas fa-spinner fa-spin fa-3x text-orange"></i>
+              <FontAwesomeIcon icon={faSpinner} spin size="3x" className="text-orange" />
             </div>
           )}
         </div>

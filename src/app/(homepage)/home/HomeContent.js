@@ -5,6 +5,39 @@ import Link from "next/link";
 import Image from "next/image";
 import dynamic from "next/dynamic";
 import styles from "./home.module.css";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faCheck,
+  faImage,
+  faMusic,
+  faBook,
+  faGlobe,
+  faLanguage,
+  faMicrophone,
+  faGraduationCap,
+  faBookOpen
+} from "@fortawesome/free-solid-svg-icons";
+
+const iconMap = {
+  "fa-music": faMusic,
+  "fa-book": faBook,
+  "fa-globe": faGlobe,
+  "fa-language": faLanguage,
+  "fa-microphone": faMicrophone,
+  "fa-graduation-cap": faGraduationCap,
+  "fa-book-open": faBookOpen,
+};
+
+const getIcon = (classStr) => {
+  if (!classStr) return faMusic;
+  const keys = Object.keys(iconMap);
+  for (const key of keys) {
+    if (classStr.includes(key)) {
+      return iconMap[key];
+    }
+  }
+  return faMusic;
+};
 
 // Helper to get initials
 const getInitials = (name) => {
@@ -46,9 +79,11 @@ const TeachersSection = dynamic(
                             (teacher.avatar.startsWith("/") ||
                               teacher.avatar.startsWith("http") ||
                               teacher.avatar.startsWith("data:")) ? (
-                              <img
+                              <Image
                                 src={(process.env.NEXT_PUBLIC_BASE_PATH || "") + teacher.avatar}
                                 alt={teacher.name}
+                                width={150}
+                                height={150}
                                 style={{
                                   width: "100%",
                                   height: "100%",
@@ -81,9 +116,11 @@ const TeachersSection = dynamic(
                           (teacher.avatar.startsWith("/") ||
                             teacher.avatar.startsWith("http") ||
                             teacher.avatar.startsWith("data:")) ? (
-                            <img
+                            <Image
                               src={(process.env.NEXT_PUBLIC_BASE_PATH || "") + teacher.avatar}
                               alt={teacher.name}
+                              width={150}
+                              height={150}
                               style={{
                                 width: "100%",
                                 height: "100%",
@@ -174,9 +211,11 @@ const CoursesSection = dynamic(
                       <div className="course-card-icon text-center p-5 h-100">
                         <div className="course-icon mb-4">
                           {course.bgImage ? (
-                            <img
+                            <Image
                               src={(process.env.NEXT_PUBLIC_BASE_PATH || "") + course.bgImage}
                               alt={course.name}
+                              width={80}
+                              height={80}
                               style={{
                                 width: "80px",
                                 height: "80px",
@@ -185,9 +224,11 @@ const CoursesSection = dynamic(
                               }}
                             />
                           ) : (
-                            <i
-                              className={`${course.icon || "fas fa-music"} fa-4x text-orange`}
-                            ></i>
+                            <FontAwesomeIcon
+                              icon={getIcon(course.icon)}
+                              size="4x"
+                              className="text-orange"
+                            />
                           )}
                         </div>
                         <h3>{course.name}</h3>
@@ -196,7 +237,7 @@ const CoursesSection = dynamic(
                           <ul className="text-start">
                             {course.points?.map((point, i) => (
                               <li key={i}>
-                                <i className="fas fa-check text-orange me-2"></i>{" "}
+                                <FontAwesomeIcon icon={faCheck} className="text-orange me-2" />{" "}
                                 {point}
                               </li>
                             ))}
@@ -214,9 +255,11 @@ const CoursesSection = dynamic(
                     <div className="course-card-icon text-center p-5 h-100">
                       <div className="course-icon mb-4">
                         {course.bgImage ? (
-                          <img
+                          <Image
                             src={(process.env.NEXT_PUBLIC_BASE_PATH || "") + course.bgImage}
                             alt={course.name}
+                            width={80}
+                            height={80}
                             style={{
                               width: "80px",
                               height: "80px",
@@ -225,9 +268,11 @@ const CoursesSection = dynamic(
                             }}
                           />
                         ) : (
-                          <i
-                            className={`${course.icon || "fas fa-music"} fa-4x text-orange`}
-                          ></i>
+                          <FontAwesomeIcon
+                            icon={getIcon(course.icon)}
+                            size="4x"
+                            className="text-orange"
+                          />
                         )}
                       </div>
                       <h3>{course.name}</h3>
@@ -236,7 +281,7 @@ const CoursesSection = dynamic(
                         <ul className="text-start">
                           {course.points?.map((point, i) => (
                             <li key={i}>
-                              <i className="fas fa-check text-orange me-2"></i>{" "}
+                              <FontAwesomeIcon icon={faCheck} className="text-orange me-2" />{" "}
                               {point}
                             </li>
                           ))}
@@ -452,7 +497,7 @@ export default function HomeContent({ home }) {
                       className="rounded bg-light d-flex align-items-center justify-content-center"
                       style={{ height: "400px" }}
                     >
-                      <i className="fas fa-image fa-4x text-muted"></i>
+                      <FontAwesomeIcon icon={faImage} size="4x" className="text-muted" />
                     </div>
                   )}
                 </div>

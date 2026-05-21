@@ -3,6 +3,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import Banner from "@/components/Banner";
 import api from "@/lib/api";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCalendarAlt, faSpinner } from "@fortawesome/free-solid-svg-icons";
 
 export default function EventsContent({ initialData }) {
   const [events, setEvents] = useState(() => {
@@ -88,7 +90,7 @@ export default function EventsContent({ initialData }) {
                       className={`vs-category-btn vs-event-btn ${activeEventId === e._id ? "active" : ""}`}
                       onClick={() => handleCategoryChange(e._id)}
                     >
-                      <i className="fas fa-calendar-alt me-2 text-orange"></i>
+                      <FontAwesomeIcon icon={faCalendarAlt} className="me-2 text-orange" />
                       {e.dateLabel}
                     </button>
                   ))}
@@ -129,7 +131,7 @@ export default function EventsContent({ initialData }) {
 
           {loading && (
             <div className="text-center py-5">
-              <i className="fas fa-spinner fa-spin fa-3x text-orange"></i>
+              <FontAwesomeIcon icon={faSpinner} spin size="3x" className="text-orange" />
             </div>
           )}
         </div>

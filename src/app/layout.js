@@ -1,7 +1,9 @@
 import { Poppins, Kadwa, Tangerine, Yatra_One } from "next/font/google";
-import FontAwesomeLoader from "@/components/FontAwesomeLoader";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./globals.css";
+import { config } from "@fortawesome/fontawesome-svg-core";
+import "@fortawesome/fontawesome-svg-core/styles.css";
+config.autoAddCss = false;
 
 const poppins = Poppins({
   weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
@@ -72,8 +74,6 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" className={`${poppins.variable} ${kadwa.variable} ${tangerine.variable} ${yatraOne.variable}`} suppressHydrationWarning data-scroll-behavior="smooth">
       <head>
-        {/* Font Awesome 6.5.2 (Latest) - Consolidates all previous versions */}
-        <FontAwesomeLoader />
       </head>
       <body className={poppins.className} suppressHydrationWarning>
         {children}

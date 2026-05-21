@@ -3,6 +3,8 @@ import api from "@/lib/api";
 import FoundationContent from "./FoundationContent";
 import Banner from "@/components/Banner";
 import { getFoundationData } from "@/lib/services/dataService";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faHandHoldingHeart } from "@fortawesome/free-solid-svg-icons";
 
 /**
  * Server Component for the Vidyasthanam Foundation Page
@@ -62,7 +64,7 @@ export default async function VidyasthanamFoundationPage() {
         <Banner />
         <div className="container py-5 text-center">
           <div className="py-5">
-            <i className="fas fa-hand-holding-heart fa-4x text-orange mb-4"></i>
+            <FontAwesomeIcon icon={faHandHoldingHeart} size="4x" className="text-orange mb-4" />
             <h3>Foundation Information Temporarily Unavailable</h3>
             <p className="text-muted">We are currently updating our foundation details. Please check back later!</p>
           </div>
