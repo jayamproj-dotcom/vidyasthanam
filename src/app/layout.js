@@ -1,5 +1,5 @@
-import { Poppins, Kadwa, Tangerine, Yatra_One, Playfair_Display } from "next/font/google";
-import Script from "next/script";
+import { Poppins, Kadwa, Tangerine, Yatra_One } from "next/font/google";
+import FontAwesomeLoader from "@/components/FontAwesomeLoader";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./globals.css";
 
@@ -29,14 +29,6 @@ const yatraOne = Yatra_One({
   weight: ["400"],
   subsets: ["latin"],
   variable: "--font-yatra-one",
-  display: "swap",
-});
-
-const playfairDisplay = Playfair_Display({
-  weight: ["400", "500", "600", "700", "800", "900"],
-  style: ["normal", "italic"],
-  subsets: ["latin"],
-  variable: "--font-playfair-display",
   display: "swap",
 });
 
@@ -76,17 +68,14 @@ export const metadata = {
   },
 };
 
-
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" className={`${poppins.variable} ${kadwa.variable} ${tangerine.variable} ${yatraOne.variable} ${playfairDisplay.variable}`} suppressHydrationWarning data-scroll-behavior="smooth">
+    <html lang="en" className={`${poppins.variable} ${kadwa.variable} ${tangerine.variable} ${yatraOne.variable}`} suppressHydrationWarning data-scroll-behavior="smooth">
       <head>
         {/* Font Awesome 6.5.2 (Latest) - Consolidates all previous versions */}
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" crossOrigin="anonymous" referrerPolicy="no-referrer" />
+        <FontAwesomeLoader />
       </head>
       <body className={poppins.className} suppressHydrationWarning>
-        {/* Google Recaptcha Enterprise */}
-        <Script src="https://www.google.com/recaptcha/enterprise.js" strategy="afterInteractive" />
         {children}
       </body>
     </html>
