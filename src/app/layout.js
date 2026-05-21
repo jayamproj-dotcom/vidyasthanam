@@ -51,10 +51,6 @@ export const metadata = {
   description: "Learn Carnatic, Hindustani, Veena, Vocal, and Languages at Vidyasthanam, Chennai.",
   keywords: ["Indian Music", "Culture", "Languages", "Carnatic Music", "Hindustani Music", "Vocal Training", "Veena", "Sanskrit", "Tamil", "Chennai"],
   authors: [{ name: "Vidyasthanam" }],
-  robots: {
-    index: false,
-    follow: false,
-  },
   openGraph: {
     type: "website",
     locale: "en_IN",
@@ -86,7 +82,7 @@ export default function RootLayout({ children }) {
       <head>
         {/* Font Awesome 6.5.2 (Latest) - Consolidates all previous versions */}
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" crossOrigin="anonymous" referrerPolicy="no-referrer" />
-        
+
         {/* Google Recaptcha Enterprise */}
         <script src="https://www.google.com/recaptcha/enterprise.js" async defer></script>
       </head>
