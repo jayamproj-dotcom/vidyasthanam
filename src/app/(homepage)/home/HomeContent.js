@@ -62,7 +62,7 @@ const TeachersSection = dynamic(
                             )}
                           </div>
                         </div>
-                        <h4 className="teacher-name">{teacher.name}</h4>
+                        <h3 className="teacher-name">{teacher.name}</h3>
                         <p className="text-muted">{teacher.position}</p>
                         <p>{teacher.desc}</p>
                       </div>
@@ -97,7 +97,7 @@ const TeachersSection = dynamic(
                           )}
                         </div>
                       </div>
-                      <h4 className="teacher-name">{teacher.name}</h4>
+                      <h3 className="teacher-name">{teacher.name}</h3>
                       <p className="text-muted">{teacher.position}</p>
                       <p>{teacher.desc}</p>
                     </div>

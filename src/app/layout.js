@@ -1,4 +1,5 @@
 import { Poppins, Kadwa, Tangerine, Yatra_One, Playfair_Display } from "next/font/google";
+import Script from "next/script";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./globals.css";
 
@@ -82,14 +83,12 @@ export default function RootLayout({ children }) {
       <head>
         {/* Font Awesome 6.5.2 (Latest) - Consolidates all previous versions */}
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" crossOrigin="anonymous" referrerPolicy="no-referrer" />
-
-        {/* Google Recaptcha Enterprise */}
-        <script src="https://www.google.com/recaptcha/enterprise.js" async defer></script>
       </head>
       <body className={poppins.className} suppressHydrationWarning>
+        {/* Google Recaptcha Enterprise */}
+        <Script src="https://www.google.com/recaptcha/enterprise.js" strategy="afterInteractive" />
         {children}
       </body>
     </html>
   );
 }
-

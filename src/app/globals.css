@@ -1,3 +1,20 @@
+/* Custom Font Face Override for FontAwesome to support font-display: swap */
+@font-face {
+  font-family: 'Font Awesome 6 Free';
+  font-style: normal;
+  font-weight: 900;
+  font-display: swap;
+  src: url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/webfonts/fa-solid-900.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Font Awesome 6 Brands';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/webfonts/fa-brands-400.woff2') format('woff2');
+}
+
 /* General Styles */
 
 :root {
@@ -528,6 +545,12 @@ a {
     margin-left: 5px !important;
 }
 
+.navbar-brand img {
+    width: auto !important;
+    height: auto !important;
+    object-fit: contain;
+}
+
 .nav-link {
     color: #67080E !important;
     margin: 0 4px;
@@ -875,14 +898,16 @@ a {
     object-fit: cover;
 }
 
-.teacher-card h4 {
+.teacher-card h3 {
     margin-top: 5px;
     color: #333;
+    font-size: 1.35rem;
+    font-weight: 600;
 }
 
 .teacher-card p.text-muted {
-    color: var(--orange) !important;
-    font-weight: 500;
+    color: #67080E !important;
+    font-weight: 600;
 }
 
 .social-links a {
@@ -3060,6 +3085,8 @@ section {
 
     .navbar-brand img {
         height: 45px;
+        width: auto !important;
+        object-fit: contain;
     }
 
 }

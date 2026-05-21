@@ -37,7 +37,9 @@ export default async function Layout({ children }) {
     return (
         <>
             <Navbar initialData={navData} />
-            {children}
+            <main>
+                {children}
+            </main>
             <Footer navData={navData} coursesData={coursesData} settingsData={settingsData} contactData={contactData} />
         </>
     );
