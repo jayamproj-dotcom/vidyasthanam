@@ -13,9 +13,7 @@ export const saveBase64Image = async (base64String, folder = "uploads") => {
     const base64Data = base64String.replace(/^data:image\/\w+;base64,/, "");
     const buffer = Buffer.from(base64Data, "base64");
 
-    // Use a content hash (SHA-256) of the buffer to prevent duplicate storage
-    const hash = crypto.createHash("sha256").update(buffer).digest("hex");
-    const fileName = `${hash}.webp`;
+    const fileName = `${crypto.randomUUID()}.webp`;
     const uploadDir = path.join(process.cwd(), "public", folder);
 
     if (!fs.existsSync(uploadDir)) {
@@ -23,18 +21,23 @@ export const saveBase64Image = async (base64String, folder = "uploads") => {
     }
 
     const filePath = path.join(uploadDir, fileName);
-    
-    // Convert the image buffer to WebP and save it only if it doesn't exist
-    if (!fs.existsSync(filePath)) {
-      await sharp(buffer)
-        .webp({ quality: 80 })
-        .toFile(filePath);
-    }
+
+    // Convert the image buffer to WebP and save it
+    await sharp(buffer)
+      .webp({ quality: 80 })
+      .toFile(filePath);
 
     // Return the public URL directly
     return `/${folder}/${fileName}`;
   } catch (error) {
-    console.error("Error saving image:", error);
-    throw new Error("Failed to save image");
+    console.error("Upload error:", error);
+    let userMessage = error.message;
+    if (error instanceof SyntaxError) {
+      userMessage = "Failed to parse the upload payload. The file may be too large, or the request was interrupted.";
+    }
+    return NextResponse.json(
+      { success: false, message: userMessage },
+      { status: 500 }
+    );
   }
 };
