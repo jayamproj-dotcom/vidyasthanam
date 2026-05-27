@@ -13,7 +13,9 @@ const SettingSchema = new mongoose.Schema({
     user: { type: String, default: "" },
     pass: { type: String, default: "" },
     fromEmail: { type: String, default: "" },
-    senderName: { type: String, default: "" }
+    senderName: { type: String, default: "" },
+    encryption: { type: String, default: "tls" },
+    toEmail: { type: String, default: "" }
   },
   socialMedia: {
     type: [SocialMediaSchema],

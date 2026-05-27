@@ -34,7 +34,7 @@ export async function PUT(request) {
     if (authError) return authError;
 
     const body = await request.json();
-    await connectToDatabase();
+    await connectToDatabase(); // Ensure connection is active
 
     const update = {};
     if (body.smtp !== undefined) {

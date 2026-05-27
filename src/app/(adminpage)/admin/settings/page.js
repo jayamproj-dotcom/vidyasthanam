@@ -31,7 +31,7 @@ export default function MasterSettingsPage() {
   const [savingSocial, setSavingSocial] = useState(false);
 
   const [settings, setSettings] = useState({
-    smtp: { host: "", port: "", user: "", pass: "", fromEmail: "", senderName: "" },
+    smtp: { host: "", port: "", user: "", pass: "", fromEmail: "", senderName: "", encryption: "tls", toEmail: "" },
     socialMedia: defaultSocial
   });
 
@@ -54,7 +54,16 @@ export default function MasterSettingsPage() {
             return found ? { ...def, link: found.link, isActive: found.isActive ?? true } : def;
           });
           setSettings({
-            smtp: fetchedData.smtp || { host: "", port: "", user: "", pass: "", fromEmail: "", senderName: "" },
+            smtp: {
+              host: fetchedData.smtp?.host || "",
+              port: fetchedData.smtp?.port || "",
+              user: fetchedData.smtp?.user || "",
+              pass: fetchedData.smtp?.pass || "",
+              senderName: fetchedData.smtp?.senderName || "",
+              fromEmail: fetchedData.smtp?.fromEmail || "",
+              encryption: fetchedData.smtp?.encryption || "tls",
+              toEmail: fetchedData.smtp?.toEmail || ""
+            },
             socialMedia: mergedSocial
           });
         }
@@ -66,13 +75,17 @@ export default function MasterSettingsPage() {
     })();
   }, [addToast]);
 
-  const handleSmtpChange = (e) => {
-    const { name, value } = e.target;
-    setSettings(prev => ({
-      ...prev,
-      smtp: { ...prev.smtp, [name]: value }
-    }));
-  };
+const handleSmtpChange = (e) => {
+  const { name, value } = e.target;
+
+  setSettings(prev => ({
+    ...prev,
+    smtp: {
+      ...prev.smtp,
+      [name]: value
+    }
+  }));
+};
 
   const handleSocialLinkChange = (index, value) => {
     setSettings(prev => {
@@ -234,6 +247,29 @@ export default function MasterSettingsPage() {
                 onChange={handleSmtpChange}
                 placeholder="noreply@example.com"
                 required
+              />
+            </div>
+            <div className={styles.formGroup}>
+              <label>Encryption Protocol <span style={{ color: "#dc3545" }}>*</span></label>
+              <select
+                name="encryption"
+                value={settings.smtp.encryption || "tls"}
+                onChange={handleSmtpChange}
+                required
+              >
+                <option value="ssl">SSL</option>
+                <option value="tls">TLS</option>
+                <option value="none">None</option>
+              </select>
+            </div>
+            <div className={styles.formGroup}>
+              <label>Recipient Identity (To Email)</label>
+              <input
+                type="email"
+                name="toEmail"
+                value={settings.smtp.toEmail || ""}
+                onChange={handleSmtpChange}
+                placeholder="info@example.com"
               />
             </div>
           </div>

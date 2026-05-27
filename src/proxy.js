@@ -118,6 +118,8 @@ export async function proxy(request) {
   const publicApiRoutes = [
     "/api/admin/login",
     "/api/admin/logout",
+    "/api/contact/send",
+    "/api/registration/send",
   ];
 
   const isPublicApi = publicApiRoutes.some(

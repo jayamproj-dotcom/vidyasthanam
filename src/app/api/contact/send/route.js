@@ -1,8 +1,6 @@
 import { NextResponse } from "next/server";
-import { connectToDatabase } from "@/lib/mongodb";
-import Setting from "@/models/Setting";
-import { decryptPassword } from "@/lib/crypto";
 import { generateContactEmailHtml } from "@/lib/emailTemplate";
+import { sendEmail } from "@/lib/email";
 
 export async function POST(request) {
   try {
@@ -28,7 +26,7 @@ export async function POST(request) {
       const verifyRes = await fetch("https://www.google.com/recaptcha/api/siteverify", {
         method: "POST",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: `secret=${secretKey}&response=${recaptchaToken}`
+        body: `secret=${secretKey}&response=${recaptchaToken}`,
       });
       const verifyData = await verifyRes.json();
       if (!verifyData.success) {
@@ -39,16 +37,17 @@ export async function POST(request) {
       }
     }
 
-    await connectToDatabase();
-    const settingsDoc = await Setting.findOne({});
-    const smtp = settingsDoc?.smtp;
-
     const htmlContent = generateContactEmailHtml({ name, email_id, phone_no, subject, message });
 
-    if (!smtp?.host || !smtp?.user || !smtp?.pass) {
-      console.warn("[Contact Dispatch] SMTP Server settings are unconfigured. Request payload captured in operational logs.");
+    // Use our common sendEmail utility
+    const emailResult = await sendEmail({
+      replyTo: email_id,
+      subject: `New Platform Message: ${subject}`,
+      html: htmlContent
+    });
+
+    if (emailResult.simulated) {
       console.log("=== SIMULATED EMAIL DISPATCH LOG ===");
-      console.log("To:", smtp?.fromEmail || "Admin");
       console.log("Subject:", subject);
       console.log("Content Preview:", htmlContent);
       return NextResponse.json({
@@ -57,43 +56,16 @@ export async function POST(request) {
       });
     }
 
-    const decryptedPass = decryptPassword(smtp.pass) || smtp.pass;
-
-    let nodemailer;
-    try {
-      nodemailer = (await import("nodemailer")).default || await import("nodemailer");
-    } catch (err) {
-      console.error("Nodemailer package is missing on gateway. Action required: npm install nodemailer");
+    if (!emailResult.success) {
       return NextResponse.json(
-        { success: false, message: "Server gateway transport module unavailable. Please execute 'npm install nodemailer' in shell environments." },
-        { status: 501 }
+        { success: false, message: emailResult.message || "Failed to dispatch email." },
+        { status: 500 }
       );
     }
 
-    const transporter = nodemailer.createTransport({
-      host: smtp.host,
-      port: parseInt(smtp.port) || 587,
-      secure: parseInt(smtp.port) === 465,
-      auth: {
-        user: smtp.user,
-        pass: decryptedPass,
-      },
-    });
-
-    const mailOptions = {
-      from: `"${smtp.senderName || name}" <${smtp.fromEmail || smtp.user}>`,
-      replyTo: email_id,
-      to: smtp.fromEmail || smtp.user,
-      subject: `New Platform Message: ${subject}`,
-      html: htmlContent,
-    };
-
-    const info = await transporter.sendMail(mailOptions);
-    console.log("Live SMTP message dispatch verification ID:", info.messageId);
-
     return NextResponse.json({
       success: true,
-      message: "Message sent successfully!"
+      message: "Message sent successfully!",
     });
 
   } catch (err) {

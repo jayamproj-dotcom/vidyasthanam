@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
 import { connectToDatabase } from "@/lib/mongodb";
 import Setting from "@/models/Setting";
-import { decryptPassword } from "@/lib/crypto";
 import { generateRegistrationEmailHtml } from "@/lib/emailTemplate";
+import { sendEmail } from "@/lib/email";
 
 export async function POST(request) {
   try {
@@ -40,53 +40,34 @@ export async function POST(request) {
     }
 
     await connectToDatabase();
-    const settingsDoc = await Setting.findOne({});
-    const smtp = settingsDoc?.smtp;
+    const setting = await Setting.findOne({});
+    const senderName = setting?.smtp?.senderName 
+      ? `${setting.smtp.senderName} (Admissions)` 
+      : "Vidyasthanam Admissions";
 
     const htmlContent = generateRegistrationEmailHtml({ name, dob, gender, address, phone, email, message });
     const subject = `New Student Registration: ${name}`;
 
-    if (!smtp?.host || !smtp?.user || !smtp?.pass) {
-      console.warn("[Registration Dispatch] SMTP Server settings unconfigured. Logging submission context internally.");
+    const emailResult = await sendEmail({
+      replyTo: email,
+      subject,
+      html: htmlContent
+    });
+
+    if (emailResult.simulated) {
+      console.warn("[Registration Dispatch] SMTP Server settings unconfigured.");
       return NextResponse.json({
         success: true,
         message: "Registration profile recorded securely! We will reach out shortly."
       });
     }
 
-    const decryptedPass = decryptPassword(smtp.pass) || smtp.pass;
-
-    let nodemailer;
-    try {
-      nodemailer = (await import("nodemailer")).default || await import("nodemailer");
-    } catch (err) {
+    if (!emailResult.success) {
       return NextResponse.json(
-        { success: false, message: "Server mail transport module unavailable." },
+        { success: false, message: "Failed to dispatch registration email. Please verify SMTP gateway status." },
         { status: 500 }
       );
     }
-
-    const transporter = nodemailer.createTransport({
-      host: smtp.host,
-      port: Number(smtp.port) || 465,
-      secure: Number(smtp.port) === 465,
-      auth: {
-        user: smtp.user,
-        pass: decryptedPass,
-      },
-    });
-
-    const senderName = smtp.senderName ? `${smtp.senderName} (Admissions)` : "Vidyasthanam Admissions";
-    const mailOptions = {
-      from: `"${senderName}" <${smtp.fromEmail || smtp.user}>`,
-      to: smtp.fromEmail || smtp.user,
-      replyTo: email,
-      subject: subject,
-      html: htmlContent,
-    };
-
-    const info = await transporter.sendMail(mailOptions);
-    console.log("Student Registration relay verification ID:", info.messageId);
 
     return NextResponse.json({
       success: true,
