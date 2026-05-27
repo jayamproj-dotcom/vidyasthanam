@@ -55,6 +55,12 @@ PORT=3009
 
 to work correctly in production.
 
+or
+
+* directly goto the server.js file change port for 
+
+const currentPort = parseInt(process.env.PORT, 10) || 3000 -> this port value can be change to run;
+
 4. Prepare Standalone Deployment Folder
 
 After build, copy required files into .next/standalone.
