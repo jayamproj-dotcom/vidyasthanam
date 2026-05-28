@@ -13,9 +13,8 @@ const Toast = ({ message, type, onClose }) => {
 
   return (
     <div
-      className={`${styles.toast} ${
-        type === "success" ? styles.toastSuccess : styles.toastError
-      }`}
+      className={`${styles.toast} ${type === "success" ? styles.toastSuccess : styles.toastError
+        }`}
     >
       <i
         className={
@@ -44,16 +43,16 @@ const EMPTY_COURSE = {
 
 // ── Main component ─────────────────────────────────────────────────────────────
 export default function MasterCoursesEditor() {
-  const [toasts, setToasts]         = useState([]);
-  const [loading, setLoading]       = useState(false);
-  const [saving,  setSaving]        = useState(false);
+  const [toasts, setToasts] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [saving, setSaving] = useState(false);
 
   // Page-level data (meta + toggle)
   const [pageData, setPageData] = useState({
-    metaTitle:       "",
-    metaKeywords:    "",
+    metaTitle: "",
+    metaKeywords: "",
     metaDescription: "",
-    isActive:        true,
+    isActive: true,
   });
 
   // Courses list
@@ -65,8 +64,8 @@ export default function MasterCoursesEditor() {
 
   // Modal state
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [editIndex,   setEditIndex]   = useState(null);
-  const [tempCourse,  setTempCourse]  = useState({ ...EMPTY_COURSE });
+  const [editIndex, setEditIndex] = useState(null);
+  const [tempCourse, setTempCourse] = useState({ ...EMPTY_COURSE });
 
   // ── Toast helpers ────────────────────────────────────────────────────────────
   const addToast = useCallback((message, type = "success") => {
@@ -115,7 +114,7 @@ export default function MasterCoursesEditor() {
     if (!pageData.metaTitle.trim()) errors.metaTitle = "Meta title is required";
     if (!pageData.metaKeywords.trim()) errors.metaKeywords = "Meta keywords are required";
     if (!pageData.metaDescription.trim()) errors.metaDescription = "Meta description is required";
-    
+
     setFormErrors(errors);
     return Object.keys(errors).length === 0;
   };
@@ -124,7 +123,7 @@ export default function MasterCoursesEditor() {
     const errors = {};
     if (!tempCourse.name.trim()) errors.name = "Course name is required";
     if (!tempCourse.number.trim()) errors.number = "Course code is required";
-    
+
     setModalErrors(errors);
     return Object.keys(errors).length === 0;
   };
@@ -139,8 +138,8 @@ export default function MasterCoursesEditor() {
     setSaving(true);
     try {
       await putData({
-        metaTitle:       pageData.metaTitle.trim(),
-        metaKeywords:    pageData.metaKeywords.trim(),
+        metaTitle: pageData.metaTitle.trim(),
+        metaKeywords: pageData.metaKeywords.trim(),
         metaDescription: pageData.metaDescription.trim(),
       });
       addToast("Meta data saved successfully!", "success");
@@ -197,7 +196,7 @@ export default function MasterCoursesEditor() {
       // Deep-clone so edits don't mutate state directly
       setTempCourse({
         ...courses[index],
-        points:      [...(courses[index].points      || [""])],
+        points: [...(courses[index].points || [""])],
         paymentInfo: [...(courses[index].paymentInfo || [""])],
       });
     } else {
@@ -242,7 +241,7 @@ export default function MasterCoursesEditor() {
 
       await putData({ courses: cleanedCourses });
       setCourses(cleanedCourses);
-      
+
       addToast(
         editIndex !== null ? "Course updated successfully!" : "Course added successfully!",
         "success"
@@ -393,7 +392,7 @@ export default function MasterCoursesEditor() {
                 className={formErrors.metaTitle ? styles.errorInput : ""}
                 suppressHydrationWarning
               />
-              {formErrors.metaTitle && <span className={styles.errorMessage}><i className="fas fa-exclamation-triangle" style={{marginRight: '5px'}} /> {formErrors.metaTitle}</span>}
+              {formErrors.metaTitle && <span className={styles.errorMessage}><i className="fas fa-exclamation-triangle" style={{ marginRight: '5px' }} /> {formErrors.metaTitle}</span>}
             </div>
             <div className={`${styles.formGroup} ${styles.fullWidth}`}>
               <label>
@@ -408,7 +407,7 @@ export default function MasterCoursesEditor() {
                 className={formErrors.metaKeywords ? styles.errorInput : ""}
                 suppressHydrationWarning
               />
-              {formErrors.metaKeywords && <span className={styles.errorMessage}><i className="fas fa-exclamation-triangle" style={{marginRight: '5px'}} /> {formErrors.metaKeywords}</span>}
+              {formErrors.metaKeywords && <span className={styles.errorMessage}><i className="fas fa-exclamation-triangle" style={{ marginRight: '5px' }} /> {formErrors.metaKeywords}</span>}
             </div>
             <div className={`${styles.formGroup} ${styles.fullWidth}`}>
               <label>
@@ -422,7 +421,7 @@ export default function MasterCoursesEditor() {
                 style={{ minHeight: "80px" }}
                 suppressHydrationWarning
               />
-              {formErrors.metaDescription && <span className={styles.errorMessage}><i className="fas fa-exclamation-triangle" style={{marginRight: '5px'}} /> {formErrors.metaDescription}</span>}
+              {formErrors.metaDescription && <span className={styles.errorMessage}><i className="fas fa-exclamation-triangle" style={{ marginRight: '5px' }} /> {formErrors.metaDescription}</span>}
             </div>
           </div>
         </div>
@@ -446,7 +445,7 @@ export default function MasterCoursesEditor() {
             <button className={styles.uploadBtn} onClick={() => openModal()}>
               <i className="fas fa-plus"></i> Add New Course
             </button>
-          </div>  
+          </div>
 
           <div className={styles.tableResponsive}>
             <table className={styles.adminTable}>
@@ -494,8 +493,8 @@ export default function MasterCoursesEditor() {
                         </select>
                       </td>
                       <td>
-                        <div 
-                          className={styles.toggleWrapper} 
+                        <div
+                          className={styles.toggleWrapper}
                           onClick={() => toggleCourseStatus(index)}
                           style={{ transform: 'scale(0.85)', originX: 'left' }}
                         >
@@ -559,7 +558,7 @@ export default function MasterCoursesEditor() {
                     className={modalErrors.name ? styles.errorInput : ""}
                     placeholder="e.g. Online Carnatic Music Theory Workshop Level I"
                   />
-                  {modalErrors.name && <span className={styles.errorMessage}><i className="fas fa-exclamation-triangle" style={{marginRight: '5px'}} /> {modalErrors.name}</span>}
+                  {modalErrors.name && <span className={styles.errorMessage}><i className="fas fa-exclamation-triangle" style={{ marginRight: '5px' }} /> {modalErrors.name}</span>}
                 </div>
 
                 {/* Course Number */}
@@ -575,7 +574,7 @@ export default function MasterCoursesEditor() {
                     className={modalErrors.number ? styles.errorInput : ""}
                     placeholder="e.g. VS1426"
                   />
-                  {modalErrors.number && <span className={styles.errorMessage}><i className="fas fa-exclamation-triangle" style={{marginRight: '5px'}} /> {modalErrors.number}</span>}
+                  {modalErrors.number && <span className={styles.errorMessage}><i className="fas fa-exclamation-triangle" style={{ marginRight: '5px' }} /> {modalErrors.number}</span>}
                 </div>
 
                 {/* Fees */}
@@ -603,8 +602,8 @@ export default function MasterCoursesEditor() {
                 {/* Status */}
                 <div className={`${styles.formGroup} ${styles.fullWidth}`}>
                   <label>Course Display Status</label>
-                  <div 
-                    className={styles.toggleWrapper} 
+                  <div
+                    className={styles.toggleWrapper}
                     onClick={() => setTempCourse(prev => ({ ...prev, isActive: !prev.isActive }))}
                     style={{ marginTop: '8px' }}
                   >

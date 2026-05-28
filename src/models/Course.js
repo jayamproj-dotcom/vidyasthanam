@@ -18,9 +18,9 @@ const CourseSchema = new mongoose.Schema({
     metaDescription: { type: String },
     isActive: { type: Boolean, default: true },
     courses: [CourseItemSchema],
-}, { 
+}, {
     timestamps: true,
-    collection: "course" 
+    collection: "course"
 });
 
 export default mongoose.models.Course || mongoose.model("Course", CourseSchema);

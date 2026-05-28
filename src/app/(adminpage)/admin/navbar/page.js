@@ -316,9 +316,9 @@ export default function NavbarPage() {
       <div className={styles.card}>
         <div className={styles.listHeader}>
           <h3 className={styles.listTitle}>Navigation Links</h3>
-          <button className={styles.uploadBtn} onClick={() => openModal()}>
+          {/* <button className={styles.uploadBtn} onClick={() => openModal()}>
             <i className="fas fa-plus"></i> Add New Link
-          </button>
+          </button> */}
         </div>
         <div className={styles.formSection} style={{ borderBottom: "none" }}>
           <div className={styles.tableResponsive}>
@@ -397,14 +397,14 @@ export default function NavbarPage() {
                         >
                           <i className="fas fa-edit"></i>
                         </button>
-                        <button
+                        {/* <button
                           className={styles.deleteBtn}
                           onClick={() => deleteItem(item._id)}
                         >
                           <i className="fas fa-trash-alt"></i>
-                        </button>
+                        </button> */}
                       </div>
-                    </td>
+                    </td>  
                   </tr>
                 ))}
               </tbody>

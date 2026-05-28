@@ -12,7 +12,8 @@ const ContactSchema = new mongoose.Schema({
     phone2: { type: String },
     phone2Note: { type: String },
     email: { type: String },
-    googleMapUrl: { type: String }
+    googleMapUrl: { type: String },
+    footerText: { type: String }
 }, { 
     timestamps: true,
     collection: "contact" 

@@ -13,9 +13,8 @@ const Toast = ({ message, type, onClose }) => {
 
   return (
     <div
-      className={`${styles.toast} ${
-        type === "success" ? styles.toastSuccess : styles.toastError
-      }`}
+      className={`${styles.toast} ${type === "success" ? styles.toastSuccess : styles.toastError
+        }`}
     >
       <i
         className={
@@ -39,16 +38,16 @@ const EMPTY_EVENT = {
 
 // ── Main component ─────────────────────────────────────────────────────────────
 export default function MasterEventsEditor() {
-  const [toasts, setToasts]         = useState([]);
-  const [loading, setLoading]       = useState(false);
-  const [saving,  setSaving]        = useState(false);
+  const [toasts, setToasts] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [saving, setSaving] = useState(false);
 
   // Page-level data (meta + banner)
   const [pageData, setPageData] = useState({
-    metaTitle:       "",
-    metaKeywords:    "",
+    metaTitle: "",
+    metaKeywords: "",
     metaDescription: "",
-    isActive:        true,
+    isActive: true,
   });
 
   // Events list
@@ -60,8 +59,8 @@ export default function MasterEventsEditor() {
 
   // Modal state
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [editIndex,   setEditIndex]   = useState(null);
-  const [tempEvent,   setTempEvent]   = useState({ ...EMPTY_EVENT });
+  const [editIndex, setEditIndex] = useState(null);
+  const [tempEvent, setTempEvent] = useState({ ...EMPTY_EVENT });
 
   // ── Toast helpers ────────────────────────────────────────────────────────────
   const addToast = useCallback((message, type = "success") => {
@@ -110,7 +109,7 @@ export default function MasterEventsEditor() {
     if (!pageData.metaTitle?.trim()) errors.metaTitle = "Meta title is required";
     if (!pageData.metaKeywords?.trim()) errors.metaKeywords = "Meta keywords are required";
     if (!pageData.metaDescription?.trim()) errors.metaDescription = "Meta description is required";
-    
+
     setFormErrors(errors);
     return Object.keys(errors).length === 0;
   };
@@ -118,7 +117,7 @@ export default function MasterEventsEditor() {
   const validateModal = () => {
     const errors = {};
     if (!tempEvent.dateLabel?.trim()) errors.dateLabel = "Event date/label is required";
-    
+
     // Validate videos
     const videoErrors = [];
     tempEvent.videos.forEach((video, idx) => {
@@ -128,7 +127,7 @@ export default function MasterEventsEditor() {
     });
 
     if (videoErrors.length > 0) errors.videos = videoErrors;
-    
+
     setModalErrors(errors);
     return Object.keys(errors).length === 0;
   };
@@ -143,8 +142,8 @@ export default function MasterEventsEditor() {
     setSaving(true);
     try {
       await putData({
-        metaTitle:       pageData.metaTitle.trim(),
-        metaKeywords:    pageData.metaKeywords.trim(),
+        metaTitle: pageData.metaTitle.trim(),
+        metaKeywords: pageData.metaKeywords.trim(),
         metaDescription: pageData.metaDescription.trim(),
       });
       setFormErrors({}); // Clear highlights on success
@@ -210,7 +209,7 @@ export default function MasterEventsEditor() {
 
       await putData({ events: cleanedEvents });
       setEvents(cleanedEvents);
-      
+
       addToast(
         editIndex !== null ? "Event group updated successfully!" : "Event group added successfully!",
         "success"
@@ -275,7 +274,7 @@ export default function MasterEventsEditor() {
     updatedVideos[vIdx][field] = value;
     setTempEvent((prev) => ({ ...prev, videos: updatedVideos }));
     if (modalErrors.videos?.[vIdx]) {
-        setModalErrors(prev => ({ ...prev, videos: null }));
+      setModalErrors(prev => ({ ...prev, videos: null }));
     }
   };
 
@@ -433,7 +432,7 @@ export default function MasterEventsEditor() {
               <h3>{editIndex !== null ? "Edit Event Recordings" : "New Event Group"}</h3>
               <button className={styles.closeBtn} onClick={closeModal}><i className="fas fa-times"></i></button>
             </div>
-            
+
             <div className={styles.modalBody}>
               <div className={styles.grid}>
                 <div className={`${styles.formGroup} ${styles.fullWidth}`}>
@@ -442,8 +441,8 @@ export default function MasterEventsEditor() {
                     type="text"
                     value={tempEvent.dateLabel}
                     onChange={(e) => {
-                       setTempEvent({ ...tempEvent, dateLabel: e.target.value });
-                       if (modalErrors.dateLabel) setModalErrors(p => ({ ...p, dateLabel: null }));
+                      setTempEvent({ ...tempEvent, dateLabel: e.target.value });
+                      if (modalErrors.dateLabel) setModalErrors(p => ({ ...p, dateLabel: null }));
                     }}
                     className={modalErrors.dateLabel ? styles.errorInput : ""}
                     placeholder="e.g. 19 Feb 2026 or Annual Day 2026"
@@ -453,8 +452,8 @@ export default function MasterEventsEditor() {
 
                 <div className={`${styles.formGroup} ${styles.fullWidth}`}>
                   <label>Display Status</label>
-                  <div 
-                    className={styles.toggleWrapper} 
+                  <div
+                    className={styles.toggleWrapper}
                     onClick={() => setTempEvent(prev => ({ ...prev, isActive: !prev.isActive }))}
                     style={{ marginTop: '8px' }}
                   >
@@ -469,40 +468,40 @@ export default function MasterEventsEditor() {
               </div>
 
               <h4 className={styles.sectionHeader} style={{ fontSize: "16px", marginTop: '20px' }}>Videos & Iframe URLs</h4>
-              
+
               <div style={{ display: "flex", flexDirection: "column", gap: "15px", marginTop: "15px" }}>
                 {tempEvent.videos.map((video, vIdx) => (
                   <div key={vIdx} style={{ padding: "15px", background: "#f9f9f9", borderRadius: "12px", border: "1px solid #eee", position: "relative" }}>
-                    <button 
-                       className={styles.deleteBtn} 
-                       style={{ position: "absolute", top: "10px", right: "10px", width: '30px', height: '30px', padding: 0 }}
-                       onClick={() => removeVideoRow(vIdx)}
-                       disabled={tempEvent.videos.length === 1}
+                    <button
+                      className={styles.deleteBtn}
+                      style={{ position: "absolute", top: "10px", right: "10px", width: '30px', height: '30px', padding: 0 }}
+                      onClick={() => removeVideoRow(vIdx)}
+                      disabled={tempEvent.videos.length === 1}
                     >
                       <i className="fas fa-times"></i>
                     </button>
-                    
+
                     <div className={styles.grid}>
-                       <div className={styles.formGroup}>
-                          <label style={{ fontSize: "12px" }}>Video Title</label>
-                          <input
-                            type="text"
-                            value={video.title}
-                            onChange={(e) => updateVideoField(vIdx, "title", e.target.value)}
-                            className={modalErrors.videos?.[vIdx] ? styles.errorInput : ""}
-                            placeholder="e.g. Aparna Sainath Performance"
-                          />
-                       </div>
-                       <div className={styles.formGroup}>
-                          <label style={{ fontSize: "12px" }}>YouTube Embed URL</label>
-                          <input
-                            type="text"
-                            value={video.url}
-                            onChange={(e) => updateVideoField(vIdx, "url", e.target.value)}
-                            className={modalErrors.videos?.[vIdx] ? styles.errorInput : ""}
-                            placeholder="https://www.youtube.com/embed/..."
-                          />
-                       </div>
+                      <div className={styles.formGroup}>
+                        <label style={{ fontSize: "12px" }}>Video Title</label>
+                        <input
+                          type="text"
+                          value={video.title}
+                          onChange={(e) => updateVideoField(vIdx, "title", e.target.value)}
+                          className={modalErrors.videos?.[vIdx] ? styles.errorInput : ""}
+                          placeholder="e.g. Aparna Sainath Performance"
+                        />
+                      </div>
+                      <div className={styles.formGroup}>
+                        <label style={{ fontSize: "12px" }}>YouTube Embed URL</label>
+                        <input
+                          type="text"
+                          value={video.url}
+                          onChange={(e) => updateVideoField(vIdx, "url", e.target.value)}
+                          className={modalErrors.videos?.[vIdx] ? styles.errorInput : ""}
+                          placeholder="https://www.youtube.com/embed/..."
+                        />
+                      </div>
                     </div>
                     {modalErrors.videos?.[vIdx] && <span className={styles.errorMessage} style={{ marginTop: '5px', display: 'block' }}>{modalErrors.videos[vIdx]}</span>}
                   </div>

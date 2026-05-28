@@ -24,7 +24,7 @@ export async function PUT(request) {
     await connectToDatabase();
 
     const allowedFields = [
-      "metaTitle", "metaKeywords", "metaDescription", "isActive", "title", "description", "phone1", "phone1Note", "phone2", "phone2Note", "email", "googleMapUrl"
+      "metaTitle", "metaKeywords", "metaDescription", "isActive", "title", "description", "phone1", "phone1Note", "phone2", "phone2Note", "email", "googleMapUrl", "footerText"
     ];
     
     const update = {};

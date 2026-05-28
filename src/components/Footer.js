@@ -70,8 +70,7 @@ const Footer = ({ navData = [], coursesData = [], settingsData = null, contactDa
 
             <div className="footer-about">
               <p>
-                School of Indian Music, Culture and Languages Promoting
-                Traditional Knowledge.
+                {contactData?.footerText || "School of Indian Music, Culture and Languages Promoting Traditional Knowledge."}
               </p>
             </div>
           </div>

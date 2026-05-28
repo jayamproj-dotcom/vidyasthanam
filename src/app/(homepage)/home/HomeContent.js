@@ -76,9 +76,9 @@ const TeachersSection = dynamic(
                         <div className="teacher-img mb-4 rounded-circle overflow-hidden mx-auto">
                           <div className="staff-avatar">
                             {teacher.avatar &&
-                            (teacher.avatar.startsWith("/") ||
-                              teacher.avatar.startsWith("http") ||
-                              teacher.avatar.startsWith("data:")) ? (
+                              (teacher.avatar.startsWith("/") ||
+                                teacher.avatar.startsWith("http") ||
+                                teacher.avatar.startsWith("data:")) ? (
                               <Image
                                 src={(process.env.NEXT_PUBLIC_BASE_PATH || "") + teacher.avatar}
                                 alt={teacher.name}
@@ -113,9 +113,9 @@ const TeachersSection = dynamic(
                       <div className="teacher-img mb-4 rounded-circle overflow-hidden mx-auto">
                         <div className="staff-avatar">
                           {teacher.avatar &&
-                          (teacher.avatar.startsWith("/") ||
-                            teacher.avatar.startsWith("http") ||
-                            teacher.avatar.startsWith("data:")) ? (
+                            (teacher.avatar.startsWith("/") ||
+                              teacher.avatar.startsWith("http") ||
+                              teacher.avatar.startsWith("data:")) ? (
                             <Image
                               src={(process.env.NEXT_PUBLIC_BASE_PATH || "") + teacher.avatar}
                               alt={teacher.name}

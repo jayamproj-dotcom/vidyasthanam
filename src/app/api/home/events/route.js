@@ -1,4 +1,3 @@
-// v1.0.1 - Refreshed at 2026-04-14T15:07
 import { NextResponse } from "next/server";
 import { connectToDatabase } from "@/lib/mongodb";
 import Home from "@/models/Home";
@@ -33,7 +32,7 @@ export async function PATCH(req) {
     if (body.title !== undefined) updateData["events.title"] = body.title;
     if (body.desc !== undefined) updateData["events.desc"] = body.desc;
     if (body.isActive !== undefined) updateData["events.isActive"] = !!body.isActive;
-    
+
     if (body.videos) {
       updateData["events.videos"] = body.videos.map(v => ({
         ...v,

@@ -19,7 +19,7 @@ const AdminSidebar = ({ isOpen, onClose }) => {
   }, []);
 
   const homeSubPages = [
-    { name: "Home Page", path: "/admin/home/metadata", icon: "fas fa-search" },
+    { name: "Home Metadata", path: "/admin/home/metadata", icon: "fas fa-search" },
     { name: "Home Slider", path: "/admin/home/slider", icon: "fas fa-images" },
     {
       name: "About Section",

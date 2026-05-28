@@ -10,6 +10,10 @@
     "seed": "node scripts/seed-admin.js"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^6.5.2",
+    "@fortawesome/free-brands-svg-icons": "^6.5.2",
+    "@fortawesome/free-solid-svg-icons": "^6.5.2",
+    "@fortawesome/react-fontawesome": "^0.2.2",
     "bcryptjs": "^3.0.3",
     "bootstrap": "^5.3.8",
     "dotenv": "^17.4.2",
@@ -20,11 +24,7 @@
     "react": "19.2.4",
     "react-dom": "19.2.4",
     "react-google-recaptcha": "^3.1.0",
-    "sharp": "^0.33.2",
-    "@fortawesome/fontawesome-svg-core": "^6.5.2",
-    "@fortawesome/free-brands-svg-icons": "^6.5.2",
-    "@fortawesome/free-solid-svg-icons": "^6.5.2",
-    "@fortawesome/react-fontawesome": "^0.2.2"
+    "sharp": "^0.33.5"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.6",
@@ -35,5 +35,8 @@
     "last 2 Chrome versions",
     "last 2 Firefox versions",
     "last 2 Safari versions"
-  ]
+  ],
+  "optionalDependencies": {
+    "@img/sharp-linux-x64": "^0.33.2"
+  }
 }

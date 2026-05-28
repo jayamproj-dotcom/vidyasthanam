@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { connectToDatabase } from "@/lib/mongodb";
 import Course from "@/models/Course";
-import { verifyAuth } from "@/lib/auth"; 
+import { verifyAuth } from "@/lib/auth";
 import { revalidatePath, revalidateTag } from "next/cache";
 
 import { getCoursesData } from "@/lib/services/dataService";
@@ -30,7 +30,7 @@ export async function PUT(request) {
       "isActive",
       "courses",
     ];
-    
+
     const update = {};
     for (const field of allowedFields) {
       if (body[field] !== undefined) update[field] = body[field];

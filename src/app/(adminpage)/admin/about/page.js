@@ -238,9 +238,8 @@ const Toast = React.memo(({ message, type, onClose }) => {
 
   return (
     <div
-      className={`${styles.toast} ${
-        type === "success" ? styles.toastSuccess : styles.toastError
-      }`}
+      className={`${styles.toast} ${type === "success" ? styles.toastSuccess : styles.toastError
+        }`}
     >
       <i
         className={
@@ -1092,9 +1091,8 @@ export default function MasterAboutEditor() {
                       {tempData.isActive ? "Active" : "Inactive"}
                     </span>
                     <div
-                      className={`${styles.toggleSwitch} ${
-                        tempData.isActive ? styles.toggleOn : ""
-                      }`}
+                      className={`${styles.toggleSwitch} ${tempData.isActive ? styles.toggleOn : ""
+                        }`}
                     >
                       <div className={styles.toggleHandle}></div>
                     </div>

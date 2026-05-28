@@ -23,7 +23,8 @@ export default function MasterContactEditor() {
   const [contactData, setContactData] = useState({
     metaTitle: "", metaKeywords: "", metaDescription: "", isActive: true,
    title: "", description: "",
-    phone1: "", phone1Note: "", phone2: "", phone2Note: "", email: "", googleMapUrl: ""
+    phone1: "", phone1Note: "", phone2: "", phone2Note: "", email: "", googleMapUrl: "",
+    footerText: ""
   });
   const [formErrors, setFormErrors] = useState({});
 
@@ -111,6 +112,7 @@ export default function MasterContactEditor() {
         phone2Note: contactData.phone2Note?.trim() || "",
         email: contactData.email.trim(),
         googleMapUrl: contactData.googleMapUrl.trim(),
+        footerText: contactData.footerText?.trim() || "",
       }); 
       addToast("Contact Details synced successfully!"); 
     }
@@ -190,6 +192,20 @@ export default function MasterContactEditor() {
                 />
                 <small style={{ color: "#666", fontSize: "11px", marginTop: "4px", display: "block" }}>
                   Paste the "src" attribute value from your Google Maps iframe embed code.
+                </small>
+              </div>
+              <div className={`${styles.formGroup} ${styles.fullWidth}`}>
+                <label>Footer Description / About Text</label>
+                <textarea 
+                  className={styles.textarea} 
+                  style={{ minHeight: "80px" }} 
+                  name="footerText" 
+                  value={contactData.footerText || ""} 
+                  onChange={handleChange} 
+                  placeholder="School of Indian Music, Culture and Languages Promoting Traditional Knowledge."
+                />
+                <small style={{ color: "#666", fontSize: "11px", marginTop: "4px", display: "block" }}>
+                  This text will display in the footer across all pages.
                 </small>
               </div>
           </div>

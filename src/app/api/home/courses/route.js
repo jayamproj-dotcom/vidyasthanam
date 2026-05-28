@@ -16,12 +16,12 @@ export async function GET() {
       homeData && homeData.course
         ? homeData.course
         : {
-            title: "",
-            desc: "",
-            bgImage: "",
-            courses: [],
-            isActive: true,
-          };
+          title: "",
+          desc: "",
+          bgImage: "",
+          courses: [],
+          isActive: true,
+        };
 
     return NextResponse.json({ success: true, data });
   } catch (error) {

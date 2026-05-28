@@ -167,7 +167,7 @@ export default function HomeMetadataPage() {
 
       <div className={styles.contentHeader}>
         <div className={styles.flexRow}>
-          <h2>Home Page</h2>
+          <h2>Home Metadata</h2>
           {/* <div className={styles.toggleWrapper} onClick={handleToggleActive}>
             <span className={metadata.isActive ? styles.statusActive : styles.statusInactive}>
               {metadata.isActive ? "Active" : "Inactive"}
