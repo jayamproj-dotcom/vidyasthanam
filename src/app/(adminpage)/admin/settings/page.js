@@ -29,6 +29,7 @@ export default function MasterSettingsPage() {
   const [loading, setLoading] = useState(true);
   const [savingSmtp, setSavingSmtp] = useState(false);
   const [savingSocial, setSavingSocial] = useState(false);
+  const [editSmtp, setEditSmtp] = useState(false);
 
   const [settings, setSettings] = useState({
     smtp: { host: "", port: "", user: "", pass: "", fromEmail: "", senderName: "", encryption: "tls", toEmail: "" },
@@ -105,9 +106,11 @@ const handleSmtpChange = (e) => {
 
   const handleSaveSmtp = async () => {
     const { host, port, user, pass, senderName, fromEmail } = settings.smtp;
-    if (!host?.trim() || !port?.trim() || !user?.trim() || !pass?.trim() || !senderName?.trim() || !fromEmail?.trim()) {
-      addToast("All SMTP fields are required to update mail server parameters.", "error");
-      return;
+    if (editSmtp) {
+      if (!host?.trim() || !port?.trim() || !user?.trim() || !pass?.trim() || !senderName?.trim() || !fromEmail?.trim()) {
+        addToast("All SMTP fields are required to update mail server parameters.", "error");
+        return;
+      }
     }
 
     setSavingSmtp(true);
@@ -115,6 +118,7 @@ const handleSmtpChange = (e) => {
       const res = await api.put("/settings", { smtp: settings.smtp });
       if (res.success) {
         addToast("SMTP configuration saved successfully!");
+        setEditSmtp(false);
       } else {
         throw new Error(res.message);
       }
@@ -178,10 +182,26 @@ const handleSmtpChange = (e) => {
       {/* ── 1. SMTP Setup Card ── */}
       <div className={styles.card} style={{ marginBottom: "30px" }}>
         <div className={styles.formSection}>
-          <h4>SMTP Mail Server Settings</h4>
-          <p style={{ fontSize: "13px", color: "#666", marginBottom: "20px" }}>
-            Configure server gateway parameters for outgoing notifications and contact dispatches.
-          </p>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px", flexWrap: "wrap", gap: "15px" }}>
+            <div>
+              <h4 style={{ margin: 0 }}>SMTP Mail Server Settings</h4>
+              <p style={{ fontSize: "13px", color: "#666", margin: "5px 0 0 0" }}>
+                Configure server gateway parameters for outgoing notifications and contact dispatches.
+              </p>
+            </div>
+            {/* <div
+              className={styles.toggleWrapper}
+              onClick={() => setEditSmtp(!editSmtp)}
+              style={{ transform: "scale(0.85)", margin: 0 }}
+            >
+              <span className={editSmtp ? styles.statusActive : styles.statusInactive}>
+                {editSmtp ? "Edit Mode" : "Read Only"}
+              </span>
+              <div className={`${styles.toggleSwitch} ${editSmtp ? styles.toggleOn : ""}`}>
+                <div className={styles.toggleHandle} />
+              </div>
+            </div> */}
+          </div>
           <div className={styles.grid}>
             <div className={styles.formGroup}>
               <label>SMTP Hostname <span style={{ color: "#dc3545" }}>*</span></label>
@@ -191,7 +211,8 @@ const handleSmtpChange = (e) => {
                 value={settings.smtp.host}
                 onChange={handleSmtpChange}
                 placeholder="smtp.gmail.com / mail.example.com"
-                required
+                required={editSmtp}
+                disabled={!editSmtp}
               />
             </div>
             <div className={styles.formGroup}>
@@ -202,7 +223,8 @@ const handleSmtpChange = (e) => {
                 value={settings.smtp.port}
                 onChange={handleSmtpChange}
                 placeholder="465 / 587"
-                required
+                required={editSmtp}
+                disabled={!editSmtp}
               />
             </div>
             <div className={styles.formGroup}>
@@ -213,7 +235,8 @@ const handleSmtpChange = (e) => {
                 value={settings.smtp.user}
                 onChange={handleSmtpChange}
                 placeholder="user@example.com"
-                required
+                required={editSmtp}
+                disabled={!editSmtp}
               />
             </div>
             <div className={styles.formGroup}>
@@ -224,7 +247,8 @@ const handleSmtpChange = (e) => {
                 value={settings.smtp.pass}
                 onChange={handleSmtpChange}
                 placeholder="••••••••••••"
-                required
+                required={editSmtp}
+                disabled={!editSmtp}
               />
             </div>
             <div className={styles.formGroup}>
@@ -235,7 +259,8 @@ const handleSmtpChange = (e) => {
                 value={settings.smtp.senderName || ""}
                 onChange={handleSmtpChange}
                 placeholder="Vidyasthanam Portal"
-                required
+                required={editSmtp}
+                disabled={!editSmtp}
               />
             </div>
             <div className={styles.formGroup}>
@@ -246,7 +271,8 @@ const handleSmtpChange = (e) => {
                 value={settings.smtp.fromEmail}
                 onChange={handleSmtpChange}
                 placeholder="noreply@example.com"
-                required
+                required={editSmtp}
+                disabled={!editSmtp}
               />
             </div>
             <div className={styles.formGroup}>
@@ -255,7 +281,8 @@ const handleSmtpChange = (e) => {
                 name="encryption"
                 value={settings.smtp.encryption || "tls"}
                 onChange={handleSmtpChange}
-                required
+                required={editSmtp}
+                disabled={!editSmtp}
               >
                 <option value="ssl">SSL</option>
                 <option value="tls">TLS</option>
